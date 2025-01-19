@@ -1,14 +1,17 @@
 import json
 import csv
 import win32com.client
+import os
+
+# ベースディレクトリを取得
+script_dir = os.path.dirname(os.path.abspath(__file__))
+os.chdir(script_dir)
 
 # ファイルパス
-json_file_path = "test.json"
-csv_file_path = "Fujiwara_Kansetsu.csv"
-#  excel_file_path = "/mnt/c/Users/kfuji/Documents/doc2/python/Secretary/Kaken.xlsx"
-#  output_excel_path = "output.xlsx"
-excel_file_path = r"C:\\Users\\kfuji\\Documents\\doc2\\python\\Secretary\\Kaken.xlsx"
-output_excel_path = "C:\\Users\\kfuji\\Documents\\doc2\\python\\Secretary\\output.xlsx"
+json_file_path = os.path.join(script_dir, "test.json")
+csv_file_path = os.path.join(script_dir, "Fujiwara_Kansetsu.csv")
+excel_file_path = os.path.join(script_dir, "Kaken.xlsx")
+output_excel_path = os.path.join(script_dir, "output.xlsx")
 
 # JSONファイルを読み込む
 with open(json_file_path, encoding="utf-8") as file:
@@ -61,9 +64,12 @@ if "研究費" in csv_data:
 if "課題番号" in csv_data:
     sheet.Cells(20, 23).Value = csv_data["課題番号"]  # W20
 
-# 保存して終了
-workbook.SaveAs(output_excel_path)
-workbook.Close()
-excel.Quit()
-
-print(f"データを {output_excel_path} に保存しました。")
+# 上書き保存
+try:
+    workbook.SaveAs(output_excel_path)
+    print(f"データを次のパスに保存しました: {output_excel_path}")
+except Exception as e:
+    print(f"保存中にエラーが発生しました: {e}")
+finally:
+    workbook.Close()
+    excel.Quit()
