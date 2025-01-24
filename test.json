@@ -11,6 +11,15 @@
       "condition": null,
       "seller": null,
       "delivery_date": null
+		"number" : "1"
+	 },
+	 {
+		"product_name": "USBポート付延長コード キュービー パールブラック SSS-01B",
+		"price": "3780",
+		"condition": null,
+		"seller": null,
+		"delivery_date": null
+		"number" : "1"
     },
     {
       "product_name": "ツメ折れ防止巻取りLANケーブル Cat6準拠 ヨリ線 2.5m ブラック LD-MCTGT/BK2",
@@ -18,6 +27,7 @@
       "condition": null,
       "seller": null,
       "delivery_date": null
+		"number" : "1"
     },
     {
       "product_name": "Barocco Mistel MD770 JIS(日本語配列/静音赤軸) メカニカルキーボード ML-MD770-J-SR/BK",
@@ -25,6 +35,7 @@
       "condition": null,
       "seller": null,
       "delivery_date": null
+		"number" : "1"
     },
     {
       "product_name": "配送費(EC用)",
@@ -32,6 +43,7 @@
       "condition": null,
       "seller": null,
       "delivery_date": null
+		"number" : "null"
     }
   ]
 }
