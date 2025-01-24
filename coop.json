@@ -1,0 +1,30 @@
+{
+  "extracted_json": {
+    "title": "納品書",
+    "issuer": "龍谷大学生活協同組合",
+    "receiver_group": "先端理工学部",
+    "receiver_name": "藤原和将",
+    "total_amount": "14320",
+    "payment_date": "2025/01/08",
+    "items": [
+      {
+        "product_name": "Type-Cケーブル(ブラック-0.75M)",
+        "provider": null,
+        "model": "TB-40Gbps-1M Magtame",
+        "unite_price": "4680",
+        "total_price": "9360",
+        "number": "2",
+        "delivery_date": null
+      },
+      {
+        "product_name": "Type-C変換アダプタ 240W-L型-40Gbps",
+        "provider": null,
+        "model": "Magtame",
+        "unite_price": "2480",
+        "total_price": "4960",
+        "number": "2",
+        "delivery_date": null
+      }
+    ]
+  }
+}
