@@ -48,6 +48,7 @@ body {
     margin-bottom: 20px;
 }
 
+input[list],
 input[type="text"],
 input[type="file"] {
     width: 100%;
