@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>科研費自動化システム</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <div class="pdf-preview">
+                <h3>領収書PDF</h3>
+                <input type="file" id="pdfUpload" accept=".pdf">
+                <div id="pdfPreview"></div>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <div class="form-section">
+                <div class="researcher-info">
+                    <input type="text" id="researcherId" placeholder="研究者番号">
+                    <input type="text" id="researcherName" placeholder="研究者氏名">
+                    <button id="searchResearcher">研究者番号検索</button>
+                </div>
+
+                <div class="research-project">
+                    <div class="project-search">
+                        <input type="text" id="projectTitle" placeholder="研究課題">
+                        <button id="searchProject" class="search-button">課題検索</button>
+                    </div>
+                    <div class="representatives">
+                        <input type="text" id="representative" placeholder="代表者">
+                        <input type="text" id="contributor" placeholder="分担者">
+                    </div>
+                </div>
+
+                <div class="items-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>項目1</th>
+                                <th>メーカー</th>
+                                <th>型番</th>
+                                <th>個数</th>
+                                <th>単価</th>
+                                <th>金額</th>
+                                <th>費目</th>
+                            </tr>
+                        </thead>
+                        <tbody id="itemsTableBody">
+                            <!-- 動的に行が追加されます -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="payment-info">
+                    <input type="text" id="paymentLocation" placeholder="立替">
+                    <input type="text" id="paymentDestination" placeholder="支払先">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/client.js"></script>
+</body>
+
+</html>
