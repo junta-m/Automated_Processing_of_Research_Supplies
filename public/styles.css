@@ -1,133 +1,163 @@
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    line-height: 1.6;
-    color: #333;
-    background-color: #f5f5f5;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+	line-height: 1.6;
+	color: #333;
+	background-color: #f5f5f5;
 }
 
 .container {
-    display: flex;
-    max-width: 1400px;
-    margin: 20px auto;
-    gap: 20px;
-    padding: 0 20px;
+	display: flex;
+	max-width: 1400px;
+	margin: 20px auto;
+	gap: 20px;
+	padding: 0 20px;
 }
 
 .left-panel {
-    flex: 1;
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	flex: 1;
+	background: white;
+	padding: 20px;
+	border-radius: 8px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .right-panel {
-    flex: 2;
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	flex: 2;
+	background: white;
+	padding: 20px;
+	border-radius: 8px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .pdf-preview {
-    width: 100%;
-    min-height: 300px;
-    border: 2px dashed #ddd;
-    border-radius: 4px;
-    padding: 20px;
-    text-align: center;
+	width: 100%;
+	min-height: 300px;
+	border: 2px dashed #ddd;
+	border-radius: 4px;
+	padding: 20px;
+	text-align: center;
 }
 
 .form-section>div {
-    margin-bottom: 20px;
+	/* margin-bottom: 20px; */
 }
 
+input[list],
 input[type="text"],
 input[type="file"] {
-    width: 100%;
-    padding: 8px 12px;
-    margin: 8px 0;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
+	width: 100%;
+	padding: 8px 12px;
+	margin: 8px 0;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-size: 14px;
+}
+
+select {
+	width:fit-content;
+	height: 34px;
+	padding: 4px;
+	font-size: 14px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
 }
 
 button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
+	background-color: #4CAF50;
+	color: white;
+	padding: 8px 16px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 14px;
 }
 
 button:hover {
-    background-color: #45a049;
+	background-color: #45a049;
 }
 
 .researcher-info {
-    display: grid;
-    grid-template-columns: 1fr 1fr auto;
-    gap: 10px;
-    align-items: center;
+	display: grid;
+	grid-template-columns: 1fr 1fr auto;
+	gap: 10px;
+	align-items: center;
 }
 
-.representatives {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
+/* .representatives { */
+.input-line {
+	display: grid;
+	grid-template-columns: 1fr 1fr auto;
+	gap: 10px;
+}
+
+.input-line-group {
+	display: flex;
+	gap: 10px;
+	align-items: center;
+	white-space: nowrap;
 }
 
 table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: 10px;
 }
 
 th,
 td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
+	border: 1px solid #ddd;
+	padding: 8px;
+	text-align: left;
 }
 
 th {
-    background-color: #f8f8f8;
+	background-color: #f8f8f8;
 }
 
 .payment-info {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 10px;
 }
 
 .project-search {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 10px;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.search-button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    height: 38px;
-    margin-top: 8px;
+	display: flex;
+	/* grid-template-columns: 1fr 1fr auto; */
+	gap: 10px;
+	align-items: center;
+	/* margin-bottom: 10px; */
 }
 
 .search-button:hover {
-    background-color: #45a049;
+	background-color: #45a049;
+}
+
+.payment-info {
+    display: flex; /* 横並び */
+    align-items: center; /* 垂直方向を中央揃え */
+    gap: 10px; /* 間隔を10pxに設定 */
+}
+
+.payment-method {
+    width: auto; /* 選択ボックスの幅をコンテンツに合わせる */
+    padding: 4px; /* 適切なパディングを維持 */
+    font-size: 14px;
+    text-align: center;
+    border: 1px solid #ddd;
+    /* border-radius: 4px; */
+}
+
+.kadai-button {
+    width: auto !important; /* 必要な内容の幅に合わせる */
+    white-space: nowrap; /* テキストがボタンの幅を超えた場合、折り返さない */
+}
+
+#system-input {
+	 padding-top: 10px; /* パディングを設定 */
 }
