@@ -5,8 +5,8 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>科研費自動化システム</title>
-	<link rel="stylesheet" href="styles.css">
-	<!-- <link rel="stylesheet" href="/styles.css"> -->
+	<!-- <link rel="stylesheet" href="styles.css"> -->
+	<link rel="stylesheet" href="/styles.css">
 </head>
 
 <body>
@@ -17,24 +17,24 @@
 				<input type="file" id="pdfUpload" accept=".pdf">
 				<div id="pdfPreview"></div>
 			</div>
-				<br>
-				<div align="center">
-					<button id="Json-import">JSON入力</button>
-					<button id="Json-export">JSON出力</button>
-				</div>
+			<br>
+			<div align="center">
+				<button id="Json-import">JSON入力</button>
+				<button id="Json-export">JSON出力</button>
+			</div>
 		</div>
 
 		<div class="right-panel">
 			<div class="form-section">
 
 				<div class="researcher-info">
-					<input type="text" id="researcherId" placeholder="研究者番号">
-					<input type="text" id="researcherName" placeholder="研究者氏名">
-					<button id="searchResearcher">研究者番号 CiNii検索</button>
+					<input type="text" id="研究者番号" placeholder="研究者番号">
+					<input type="text" id="研究者氏名" placeholder="研究者氏名">
+					<button id="研究者番号">研究者番号 CiNii検索</button>
 				</div>
 
 				<div class="project-search">
-					<input list="projectOptions" id="projectNumber" placeholder="研究課題番号">
+					<input list="projectOptions" id="研究課題番号" placeholder="研究課題番号">
 					<datalist id="projectOptions">
 						<!-- 動的に候補が挿入される -->
 					</datalist>
@@ -44,13 +44,15 @@
 				</div>
 
 				<div class="input-line">
-					<input list="project-list" id="project-type" placeholder="課題種別">
+					<input list="project-list" id="課題種別" placeholder="課題種別">
+
 					<datalist id="project-list">
+						<option value="基盤研究(S)">基盤研究(S)</option>
 						<option value="基盤研究(A)">基盤研究(A)</option>
 						<option value="基盤研究(B)">基盤研究(B)</option>
 						<option value="基盤研究(C)">基盤研究(C)</option>
 						<option value="挑戦的萌芽研究">挑戦的萌芽研究</option>
-						<option value="若手研究(B)">若手研究(B)</option>
+						<option value="若手研究">若手研究</option>
 						<option value="学術研究助成基金">学術研究助成基金</option>
 						<option value="特別研究員奨励費">特別研究員奨励費</option>
 						<option value="特定領域研究">特定領域研究</option>
@@ -59,44 +61,44 @@
 						<option value="その他">その他</option>
 					</datalist>
 
-					<input type="text" id="project-name" placeholder="課題名">
+					<input type="text" id="課題名" placeholder="課題名">
 				</div>
 
 				<div class="input-line">
-					<input type="text" id="representative" placeholder="代表者">
-					<input type="text" id="contributor" placeholder="分担者">
+					<input type="text" id="代表者" placeholder="代表者">
+					<input type="text" id="分担者" placeholder="分担者">
 				</div>
 
 				<div class="input-line">
 					<div class="input-line-group">
 						<div>納品</div>
-						<select id="shipping-campus">
-							<option value="lab">瀬田</option>
-							<option value="office">深草</option>
-							<option value="office">大宮</option>
+						<select id="納品キャンパス">
+							<option value="瀬田">瀬田</option>
+							<option value="深草">深草</option>
+							<option value="大宮">大宮</option>
 						</select>
-						<input type="text" id="shipping-building" placeholder="棟＋部屋">
+						<input type="text" id="納品先" placeholder="棟＋部屋">
 					</div>
 
 					<div class="input-line-group">
 						<span>設置</span>
 						<select id="installed-campus">
-							<option value="lab">瀬田</option>
-							<option value="office">深草</option>
-							<option value="office">大宮</option>
+							<option value="瀬田">瀬田</option>
+							<option value="深草">深草</option>
+							<option value="大宮">大宮</option>
 						</select>
-						<input type="text" id="installed-building" placeholder="棟＋部屋">
+						<input type="text" id="設置先" placeholder="棟＋部屋">
 					</div>
 
 					</div>
 
 				<div class="payment-info">
-					<select id="paymentLocation" class="payment-method">
-						<option value="advance">立替</option>
-						<option value="vendor">業者払い</option>
+					<select id="payment" class="payment-method">
+						<option value="立替">立替</option>
+						<option value="業者払い">業者払い</option>
 					</select>
-					<input type="text" id="paymentDestination" placeholder="支払先">
-					<input type="text" id="payer" placeholder="支払者">
+					<input type="text" id="支払先" placeholder="支払先">
+					<input type="text" id="支払者" placeholder="支払者">
 				</div>
 
 				<div class="items-table">
@@ -125,7 +127,11 @@
 			</div>
 		</div>
 	</div>
-	<script src="/client.js"></script>
+	<!-- <script src="/client.js"></script> -->
+	<script src="/json_imp.js"></script>
+	<script src="/json_exp.js"></script>
+	<!-- <script src="/datalist.js"></script> -->
+
 </body>
 
 </html>
