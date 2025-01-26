@@ -45,7 +45,7 @@ body {
 }
 
 .form-section>div {
-	margin-bottom: 20px;
+	/* margin-bottom: 20px; */
 }
 
 input[list],
@@ -89,10 +89,18 @@ button:hover {
 	align-items: center;
 }
 
-.representatives {
+/* .representatives { */
+.input-line {
 	display: grid;
-	grid-template-columns: 1fr 1fr;
+	grid-template-columns: 1fr 1fr auto;
 	gap: 10px;
+}
+
+.input-line-group {
+	display: flex;
+	gap: 10px;
+	align-items: center;
+	white-space: nowrap;
 }
 
 table {
@@ -119,11 +127,11 @@ th {
 }
 
 .project-search {
-	display: grid;
-	grid-template-columns: 1fr auto;
+	display: flex;
+	/* grid-template-columns: 1fr 1fr auto; */
 	gap: 10px;
 	align-items: center;
-	margin-bottom: 10px;
+	/* margin-bottom: 10px; */
 }
 
 .search-button:hover {
@@ -142,5 +150,14 @@ th {
     font-size: 14px;
     text-align: center;
     border: 1px solid #ddd;
-    border-radius: 4px;
+    /* border-radius: 4px; */
+}
+
+.kadai-button {
+    width: auto !important; /* 必要な内容の幅に合わせる */
+    white-space: nowrap; /* テキストがボタンの幅を超えた場合、折り返さない */
+}
+
+#system-input {
+	 padding-top: 10px; /* パディングを設定 */
 }
