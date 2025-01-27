@@ -15,9 +15,13 @@
 			<div class="pdf-preview">
 				<h3>領収書PDF</h3>
 				<input type="file" id="pdfUpload" accept=".pdf">
+				<!-- <div id="pdfPreview" style="width: 100%; height: 500px; border: 1px solid #ddd; overflow: auto; position: relative;"></div> -->
 				<div id="pdfPreview"></div>
+				<div class="pdf-controls">
+					<button id="zoomIn">拡大</button>
+					<button id="zoomOut">縮小</button>
+				</div>
 			</div>
-			<br>
 			<div align="center">
 				<button id="Json-import">JSON入力</button>
 				<button id="Json-export">JSON出力</button>
@@ -130,6 +134,8 @@
 	<!-- <script src="/client.js"></script> -->
 	<script src="/json_imp.js"></script>
 	<script src="/json_exp.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.15.349/pdf.min.js"></script>
+	<script src="/pdf_preview.js"></script>
 	<!-- <script src="/datalist.js"></script> -->
 
 </body>
