@@ -17,7 +17,7 @@ body {
 	height: 100%;
 	box-sizing: border-box;
 	/* max-width: 1400px; */
-	margin: 20px auto;
+	margin: 10px auto;
 	gap: 20px;
 	padding: 0 20px;
 }
@@ -28,17 +28,19 @@ body {
 	background: white;
 	border-radius: 8px;
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-	height: 90vh;
-	width: 49%;
 	box-sizing: border-box;
 }
 
 .left-panel {
 	/* flex: 1; */
+	width: 40%;
+	height: 90vh;
 }
 
 .right-panel {
 	/* flex: 2; */
+	width: 58%;
+	height: auto;
 }
 
 .pdf-preview {
@@ -186,3 +188,5 @@ th {
     background-color: #f9f9f9;
 }
 
+.quantity input {
+}

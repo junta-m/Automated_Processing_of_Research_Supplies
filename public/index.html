@@ -23,6 +23,7 @@
 			<div align="center">
 				<button id="Json-import">JSON入力</button>
 				<button id="Json-export">JSON出力</button>
+				<button id="pdf-import">PDF情報転記</button>
 			</div>
 		</div>
 
@@ -104,24 +105,118 @@
 				</div>
 
 				<div class="items-table">
-					<table>
+					<table style="width: 100%; border-collapse: collapse;">
+						<!-- {{{ thead -->
 						<thead>
 							<tr>
-								<th>項目</th>
-								<th>メーカー</th>
-								<th>型番</th>
-								<th>個数</th>
-								<th>単価</th>
-								<th>金額</th>
-								<th>費目</th>
+								<th style="width: 15%;">項目</th>
+								<th style="width: 15%;">メーカー</th>
+								<th style="width: 15%;">型番</th>
+								<th style="width: 7%;">個数</th>
+								<th style="width: 15%;">単価</th>
+								<th style="width: 15%;">金額</th>
+								<th style="width: 13%;">費目</th>
 							</tr>
 						</thead>
+						<!-- }}} thead -->
 						<tbody id="itemsTableBody">
-							<!-- 動的に行が追加されます -->
+							<!-- {{{ tr -->
+							<tr>
+								<td><input type="text" id="項目1" placeholder="項目1" style="width: 100%;"></td>
+								<td><input type="text" id="メーカー1" placeholder="メーカー" style="width: 100%;"></td>
+								<td><input type="text" id="型番1" placeholder="型番" style="width: 100%;"></td>
+								<td>
+									<input
+										type="text"
+										id="個数1"
+										placeholder="個数"
+										style="width: 100%; text-align: center;"
+										pattern="\d*"
+										title="半角数字のみ入力してください"
+										oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+									>
+								</td>
+								<td>
+									<input
+										type="text"
+										id="単価1"
+										placeholder="単価"
+										style="width: 100%; text-align: right;"
+										pattern="\d*"
+										title="半角数字のみ入力してください"
+										oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+									>
+								</td>
+								<td>
+									<input
+										type="text"
+										id="金額1"
+										placeholder="金額"
+										style="width: 100%; text-align: right;"
+										pattern="\d*"
+										title="半角数字のみ入力してください"
+										oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+									>
+								</td>
+								<td>
+									<select id="費目1" style="width: 100%;">
+										<option value="消耗品">消耗品</option>
+										<option value="用品">用品</option>
+										<option value="備品">備品</option>
+									</select>
+								</td>
+							</tr>
+							<!-- }}} tr -->
+							<!-- {{{ tr -->
+							<tr>
+								<td><input type="text" id="項目2" placeholder="項目1" style="width: 100%;"></td>
+								<td><input type="text" id="メーカー2" placeholder="メーカー" style="width: 100%;"></td>
+								<td><input type="text" id="型番2" placeholder="型番" style="width: 100%;"></td>
+								<td>
+									<input
+										type="text"
+										id="個数2"
+										placeholder="個数"
+										style="width: 100%; text-align: center;"
+										pattern="\d*"
+										title="半角数字のみ入力してください"
+										oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+									>
+								</td>
+								<td>
+									<input
+										type="text"
+										id="単価2"
+										placeholder="単価"
+										style="width: 100%; text-align: right;"
+										pattern="\d*"
+										title="半角数字のみ入力してください"
+										oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+									>
+								</td>
+								<td>
+									<input
+										type="text"
+										id="金額2"
+										placeholder="金額"
+										style="width: 100%; text-align: right;"
+										pattern="\d*"
+										title="半角数字のみ入力してください"
+										oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+									>
+								</td>
+								<td>
+									<select id="費目2" style="width: 100%;">
+										<option value="消耗品">消耗品</option>
+										<option value="用品">用品</option>
+										<option value="備品">備品</option>
+									</select>
+								</td>
+							</tr>
+							<!-- }}} tr -->
 						</tbody>
 					</table>
 				</div>
-
 			</div>
 
 			<div id="system-input">
@@ -129,12 +224,14 @@
 			</div>
 		</div>
 	</div>
+
 	<!-- <script src="/client.js"></script> -->
 	<script src="/json_imp.js"></script>
 	<script src="/json_exp.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.15.349/pdf.min.js"></script>
 	<script src="/pdf_preview.js"></script>
-	<script src="/zoom.js"></script>
+	<!-- <script src="/zoom.js"></script> -->
+	<script src="/pdf_demo.js"></script>
 	<!-- <script src="/datalist.js"></script> -->
 
 </body>
