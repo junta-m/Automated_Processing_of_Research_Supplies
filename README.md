@@ -133,10 +133,18 @@ CREATE TABLE research_projects (
     AN TEXT NOT NULL,
     AT TEXT NOT NULL,
     PI INTEGER NOT NULL,
-    CI INTEGER
+    CI INTEGER,
+    Distributed_Campus TEXT,
+    Distributed_Location TEXT,
+    Installed_Campus TEXT,
+    Installed_Location TEXT
 );
 ```
 
++ AN: Assignment Number
++ AT: Assignment Type
++ PI: Principle Investigator
++ CI: Co-Investigator
 + 若手や学振のように, 単独の研究用の科研費があるので, 分担者はNULLを許容します.
 + 分担者は, 利用者が分担者の場合の利用を想定する. 複数いる場合は,
 人数分レコードを増やす.

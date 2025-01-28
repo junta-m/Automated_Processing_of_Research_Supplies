@@ -21,6 +21,9 @@ function fetchJsonData() {
             document.getElementById("支払先").value = extracted.issuer;
             document.getElementById("研究者氏名").value = extracted.receiver_name;
 
+            // 研究者番号の検索と入力
+            fetchResearcherNumber(extracted.receiver_name);
+
             // 項目情報の転記
             const items = extracted.items;
             items.forEach((item, index) => {
@@ -51,3 +54,27 @@ function fetchJsonData() {
             alert("エラーが発生しました。");
         });
 }
+
+// 研究者番号を取得して入力する関数
+async function fetchResearcherNumber(name) {
+    try {
+        const response = await fetch(`/getResearcherNumber?name=${encodeURIComponent(name)}`);
+        if (!response.ok) {
+            throw new Error("研究者番号の取得に失敗しました。");
+        }
+        const data = await response.json();
+
+        if (data.researcherNumber) {
+            document.getElementById("研究者番号").value = data.researcherNumber;
+        } else {
+            alert("該当する研究者番号が見つかりませんでした。");
+        }
+    } catch (error) {
+        console.error("エラー:", error);
+        alert("研究者番号の検索中にエラーが発生しました。");
+    }
+}
+
+// PDF情報転記ボタンにイベントリスナーを追加
+document.getElementById("pdf-import").addEventListener("click", fetchJsonData);
+
