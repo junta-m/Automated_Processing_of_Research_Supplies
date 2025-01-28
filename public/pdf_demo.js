@@ -1,14 +1,3 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const pdfImportButton = document.getElementById("pdf-import");
-    if (pdfImportButton) {
-        pdfImportButton.addEventListener("click", () => {
-            fetchJsonData();
-        });
-    } else {
-        console.error("ボタン要素が見つかりません: pdf-import");
-    }
-});
-
 function fetchJsonData() {
     fetch("/test.json")
         .then(response => {
@@ -32,6 +21,29 @@ function fetchJsonData() {
             document.getElementById("支払先").value = extracted.issuer;
             document.getElementById("研究者氏名").value = extracted.receiver_name;
 
+            // 項目情報の転記
+            const items = extracted.items;
+            items.forEach((item, index) => {
+                const rowNumber = String(index + 1).padStart(2, "0"); // 例: "01", "02"
+                document.getElementById(`項目${rowNumber}`).textContent = item.product_name || "";
+                document.getElementById(`メーカー${rowNumber}`).textContent = item.provider || "";
+                document.getElementById(`型番${rowNumber}`).textContent = item.model || "";
+                document.getElementById(`個数${rowNumber}`).textContent = item.number || "";
+                document.getElementById(`単価${rowNumber}`).textContent = item.unite_price || "";
+                document.getElementById(`金額${rowNumber}`).textContent = item.total_price || "";
+
+                // 単価に基づいて費目を選択
+                const unitPrice = parseFloat(item.unite_price) || 0; // 数値に変換
+                const expenseTypeField = document.getElementById(`費目${rowNumber}`);
+                if (unitPrice < 10000) {
+                    expenseTypeField.value = "消耗品";
+                } else if (unitPrice >= 200000) {
+                    expenseTypeField.value = "備品";
+                } else {
+                    expenseTypeField.value = "用品";
+                }
+            });
+
             alert("PDF情報を転記しました。");
         })
         .catch(error => {
@@ -39,4 +51,3 @@ function fetchJsonData() {
             alert("エラーが発生しました。");
         });
 }
-

@@ -11,6 +11,7 @@ body {
 	background-color: #f5f5f5;
 }
 
+/* {{{ container and pannel */
 .container {
 	display: flex;
 	width: 100%;
@@ -42,6 +43,7 @@ body {
 	width: 58%;
 	height: auto;
 }
+/* }}} */
 
 .pdf-preview {
 	width: 100%;
@@ -53,6 +55,7 @@ body {
 	margin-bottom: 5px;
 }
 
+/* {{{ form */
 .form-section>div {
 	/* margin-bottom: 20px; */
 }
@@ -61,7 +64,7 @@ input[type="text"],
 input[type="file"] {
 	width: 100%;
 	padding: 8px 12px;
-	margin: 8px 0;
+	margin: 4px 0;
 	border: 1px solid #ddd;
 	border-radius: 4px;
 	font-size: 14px;
@@ -70,7 +73,7 @@ input[type="file"] {
 input[list] {
 	width: 100%; /* 必要に応じて調整 */
 	padding: 8px 12px; /* 適切な内側余白 */
-	margin: 8px 0;
+	margin: 4px 0;
 	font-size: 14px; /* フォントサイズ */
 	border: 1px solid #ddd; /* 枠線 */
 	border-radius: 4px; /* 角を丸くする */
@@ -84,6 +87,20 @@ select {
 	border: 1px solid #ddd;
 	border-radius: 4px;
 }
+
+select.item_type {
+	padding: 4px 8px; /* 縦横の余白を調整 */
+	margin: 2px 0; /* 上下の余白を調整 */
+	font-size: 14px; /* フォントサイズを調整 */
+	line-height: 1.2; /* 行の高さを調整 */
+	height: auto; /* 固定高さを無効にして内容に応じる */
+	border: 1px solid #ddd; /* 境界線を設定 */
+	border-radius: 4px; /* 角を丸くする（任意） */
+	background-color: #fff; /* 背景色 */
+	box-sizing: border-box; /* パディングを含めた幅の計算 */
+	appearance: auto; /* ブラウザのデフォルトスタイルを無効化（任意） */
+}
+
 
 button {
 	background-color: #4CAF50;
@@ -105,6 +122,7 @@ button:hover {
 	gap: 10px;
 	align-items: center;
 }
+/* }}} */
 
 /* .representatives { */
 .input-line {
@@ -120,22 +138,6 @@ button:hover {
 	white-space: nowrap;
 }
 
-table {
-	width: 100%;
-	border-collapse: collapse;
-	margin-top: 10px;
-}
-
-th,
-td {
-	border: 1px solid #ddd;
-	padding: 8px;
-	text-align: left;
-}
-
-th {
-	background-color: #f8f8f8;
-}
 
 .payment-info {
 	display: grid;
@@ -190,3 +192,32 @@ th {
 
 .quantity input {
 }
+
+/* {{{ table */
+table {
+    width: 100%;
+    border-collapse: collapse; /* セルの境界線を重ねる */
+	 margin-top: 10px;
+}
+
+th {
+	background-color: #f8f8f8;
+}
+
+table td {
+    padding: 1px 10px; /* セル内の余白を設定 */
+    line-height: 1.3; /* 行の高さを調整 */
+    /* height: 70%; [> 高さを70%に調整 <] */
+    text-align: left; /* テキストの左揃え */
+    border: 1px solid #ddd; /* セルの境界線 */
+}
+
+table tr:nth-child(even) {
+    background-color: #f0fff0; /* 偶数行を薄い緑に設定 */
+}
+
+table tr:nth-child(odd) {
+    background-color: #ffffff; /* 奇数行を白色に設定（任意） */
+}
+
+/* }}} */

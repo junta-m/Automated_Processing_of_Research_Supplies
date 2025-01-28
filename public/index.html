@@ -105,117 +105,195 @@
 				</div>
 
 				<div class="items-table">
+
+					<!-- {{{ table -->
 					<table style="width: 100%; border-collapse: collapse;">
-						<!-- {{{ thead -->
 						<thead>
 							<tr>
-								<th style="width: 15%;">項目</th>
+								<th style="width: 25%;">項目</th>
 								<th style="width: 15%;">メーカー</th>
 								<th style="width: 15%;">型番</th>
 								<th style="width: 7%;">個数</th>
-								<th style="width: 15%;">単価</th>
-								<th style="width: 15%;">金額</th>
+								<th style="width: 10%;">単価</th>
+								<th style="width: 10%;">金額</th>
 								<th style="width: 13%;">費目</th>
 							</tr>
 						</thead>
-						<!-- }}} thead -->
 						<tbody id="itemsTableBody">
 							<!-- {{{ tr -->
 							<tr>
-								<td><input type="text" id="項目1" placeholder="項目1" style="width: 100%;"></td>
-								<td><input type="text" id="メーカー1" placeholder="メーカー" style="width: 100%;"></td>
-								<td><input type="text" id="型番1" placeholder="型番" style="width: 100%;"></td>
+								<td contenteditable="true" id="項目01"></td>
+								<td contenteditable="true" id="メーカー01"></td>
+								<td contenteditable="true" id="型番01"></td>
+								<td contenteditable="true" data-type="number" id="個数01" style="text-align: center;"></td>
+								<td contenteditable="true" data-type="number" id="単価01" style="text-align: right;"></td>
+								<td contenteditable="true" data-type="number" id="金額01" style="text-align: right;"></td>
 								<td>
-									<input
-										type="text"
-										id="個数1"
-										placeholder="個数"
-										style="width: 100%; text-align: center;"
-										pattern="\d*"
-										title="半角数字のみ入力してください"
-										oninput="this.value = this.value.replace(/[^0-9]/g, '');"
-									>
-								</td>
-								<td>
-									<input
-										type="text"
-										id="単価1"
-										placeholder="単価"
-										style="width: 100%; text-align: right;"
-										pattern="\d*"
-										title="半角数字のみ入力してください"
-										oninput="this.value = this.value.replace(/[^0-9]/g, '');"
-									>
-								</td>
-								<td>
-									<input
-										type="text"
-										id="金額1"
-										placeholder="金額"
-										style="width: 100%; text-align: right;"
-										pattern="\d*"
-										title="半角数字のみ入力してください"
-										oninput="this.value = this.value.replace(/[^0-9]/g, '');"
-									>
-								</td>
-								<td>
-									<select id="費目1" style="width: 100%;">
+									<select id="費目01" class="item_type">
 										<option value="消耗品">消耗品</option>
 										<option value="用品">用品</option>
 										<option value="備品">備品</option>
 									</select>
 								</td>
 							</tr>
-							<!-- }}} tr -->
+							<!-- tr }}} -->
 							<!-- {{{ tr -->
 							<tr>
-								<td><input type="text" id="項目2" placeholder="項目1" style="width: 100%;"></td>
-								<td><input type="text" id="メーカー2" placeholder="メーカー" style="width: 100%;"></td>
-								<td><input type="text" id="型番2" placeholder="型番" style="width: 100%;"></td>
+								<td contenteditable="true" id="項目02"></td>
+								<td contenteditable="true" id="メーカー02"></td>
+								<td contenteditable="true" id="型番02"></td>
+								<td contenteditable="true" data-type="number" id="個数02" style="text-align: center;"></td>
+								<td contenteditable="true" data-type="number" id="単価02" style="text-align: right;"></td>
+								<td contenteditable="true" data-type="number" id="金額02" style="text-align: right;"></td>
 								<td>
-									<input
-										type="text"
-										id="個数2"
-										placeholder="個数"
-										style="width: 100%; text-align: center;"
-										pattern="\d*"
-										title="半角数字のみ入力してください"
-										oninput="this.value = this.value.replace(/[^0-9]/g, '');"
-									>
-								</td>
-								<td>
-									<input
-										type="text"
-										id="単価2"
-										placeholder="単価"
-										style="width: 100%; text-align: right;"
-										pattern="\d*"
-										title="半角数字のみ入力してください"
-										oninput="this.value = this.value.replace(/[^0-9]/g, '');"
-									>
-								</td>
-								<td>
-									<input
-										type="text"
-										id="金額2"
-										placeholder="金額"
-										style="width: 100%; text-align: right;"
-										pattern="\d*"
-										title="半角数字のみ入力してください"
-										oninput="this.value = this.value.replace(/[^0-9]/g, '');"
-									>
-								</td>
-								<td>
-									<select id="費目2" style="width: 100%;">
+									<select id="費目02" class="item_type">
 										<option value="消耗品">消耗品</option>
 										<option value="用品">用品</option>
 										<option value="備品">備品</option>
 									</select>
 								</td>
 							</tr>
-							<!-- }}} tr -->
-						</tbody>
+							<!-- tr }}} -->
+							<!-- {{{ tr -->
+							<tr>
+								<td contenteditable="true" id="項目03"></td>
+								<td contenteditable="true" id="メーカー03"></td>
+								<td contenteditable="true" id="型番03"></td>
+								<td contenteditable="true" data-type="number" id="個数03" style="text-align: center;"></td>
+								<td contenteditable="true" data-type="number" id="単価03" style="text-align: right;"></td>
+								<td contenteditable="true" data-type="number" id="金額03" style="text-align: right;"></td>
+								<td>
+									<select id="費目03" class="item_type">
+										<option value="消耗品">消耗品</option>
+										<option value="用品">用品</option>
+										<option value="備品">備品</option>
+									</select>
+								</td>
+							</tr>
+							<!-- tr }}} -->
+							<!-- {{{ tr -->
+							<tr>
+								<td contenteditable="true" id="項目04"></td>
+								<td contenteditable="true" id="メーカー04"></td>
+								<td contenteditable="true" id="型番04"></td>
+								<td contenteditable="true" data-type="number" id="個数04" style="text-align: center;"></td>
+								<td contenteditable="true" data-type="number" id="単価04" style="text-align: right;"></td>
+								<td contenteditable="true" data-type="number" id="金額04" style="text-align: right;"></td>
+								<td>
+									<select id="費目04" class="item_type">
+										<option value="消耗品">消耗品</option>
+										<option value="用品">用品</option>
+										<option value="備品">備品</option>
+									</select>
+								</td>
+							</tr>
+							<!-- tr }}} -->
+							<!-- {{{ tr -->
+							<tr>
+								<td contenteditable="true" id="項目05"></td>
+								<td contenteditable="true" id="メーカー05"></td>
+								<td contenteditable="true" id="型番05"></td>
+								<td contenteditable="true" data-type="number" id="個数05" style="text-align: center;"></td>
+								<td contenteditable="true" data-type="number" id="単価05" style="text-align: right;"></td>
+								<td contenteditable="true" data-type="number" id="金額05" style="text-align: right;"></td>
+								<td>
+									<select id="費目05" class="item_type">
+										<option value="消耗品">消耗品</option>
+										<option value="用品">用品</option>
+										<option value="備品">備品</option>
+									</select>
+								</td>
+							</tr>
+							<!-- tr }}} -->
+							<!-- {{{ tr -->
+							<tr>
+								<td contenteditable="true" id="項目06"></td>
+								<td contenteditable="true" id="メーカー06"></td>
+								<td contenteditable="true" id="型番06"></td>
+								<td contenteditable="true" data-type="number" id="個数06" style="text-align: center;"></td>
+								<td contenteditable="true" data-type="number" id="単価06" style="text-align: right;"></td>
+								<td contenteditable="true" data-type="number" id="金額06" style="text-align: right;"></td>
+								<td>
+									<select id="費目06" class="item_type">
+										<option value="消耗品">消耗品</option>
+										<option value="用品">用品</option>
+										<option value="備品">備品</option>
+									</select>
+								</td>
+							</tr>
+							<!-- tr }}} -->
+							<!-- {{{ tr -->
+							<tr>
+								<td contenteditable="true" id="項目07"></td>
+								<td contenteditable="true" id="メーカー07"></td>
+								<td contenteditable="true" id="型番07"></td>
+								<td contenteditable="true" data-type="number" id="個数07" style="text-align: center;"></td>
+								<td contenteditable="true" data-type="number" id="単価07" style="text-align: right;"></td>
+								<td contenteditable="true" data-type="number" id="金額07" style="text-align: right;"></td>
+								<td>
+									<select id="費目07" class="item_type">
+										<option value="消耗品">消耗品</option>
+										<option value="用品">用品</option>
+										<option value="備品">備品</option>
+									</select>
+								</td>
+							</tr>
+							<!-- tr }}} -->
+							<!-- {{{ tr -->
+							<tr>
+								<td contenteditable="true" id="項目08"></td>
+								<td contenteditable="true" id="メーカー08"></td>
+								<td contenteditable="true" id="型番08"></td>
+								<td contenteditable="true" data-type="number" id="個数08" style="text-align: center;"></td>
+								<td contenteditable="true" data-type="number" id="単価08" style="text-align: right;"></td>
+								<td contenteditable="true" data-type="number" id="金額08" style="text-align: right;"></td>
+								<td>
+									<select id="費目08" class="item_type">
+										<option value="消耗品">消耗品</option>
+										<option value="用品">用品</option>
+										<option value="備品">備品</option>
+									</select>
+								</td>
+							</tr>
+							<!-- tr }}} -->
+							<!-- {{{ tr -->
+							<tr>
+								<td contenteditable="true" id="項目09"></td>
+								<td contenteditable="true" id="メーカー09"></td>
+								<td contenteditable="true" id="型番09"></td>
+								<td contenteditable="true" data-type="number" id="個数09" style="text-align: center;"></td>
+								<td contenteditable="true" data-type="number" id="単価09" style="text-align: right;"></td>
+								<td contenteditable="true" data-type="number" id="金額09" style="text-align: right;"></td>
+								<td>
+									<select id="費目09" class="item_type">
+										<option value="消耗品">消耗品</option>
+										<option value="用品">用品</option>
+										<option value="備品">備品</option>
+									</select>
+								</td>
+							</tr>
+							<!-- tr }}} -->
+							<!-- {{{ tr -->
+							<tr>
+								<td contenteditable="true" id="項目10"></td>
+								<td contenteditable="true" id="メーカー10"></td>
+								<td contenteditable="true" id="型番10"></td>
+								<td contenteditable="true" data-type="number" id="個数10" style="text-align: center;"></td>
+								<td contenteditable="true" data-type="number" id="単価10" style="text-align: right;"></td>
+								<td contenteditable="true" data-type="number" id="金額10" style="text-align: right;"></td>
+								<td>
+									<select id="費目10" class="item_type">
+										<option value="消耗品">消耗品</option>
+										<option value="用品">用品</option>
+										<option value="備品">備品</option>
+									</select>
+								</td>
+							</tr>
+							<!-- tr }}} -->
 					</table>
+
+					<!-- }}} -->
+
 				</div>
 			</div>
 
@@ -232,6 +310,7 @@
 	<script src="/pdf_preview.js"></script>
 	<!-- <script src="/zoom.js"></script> -->
 	<script src="/pdf_demo.js"></script>
+	<script src="/input_rule.js"></script>
 	<!-- <script src="/datalist.js"></script> -->
 
 </body>
