@@ -21,9 +21,27 @@
 
 			</div>
 			<div align="center">
-				<button id="Json-import">JSON入力</button>
-				<button id="Json-export">JSON出力</button>
-				<button id="pdf-import">PDF情報転記</button>
+				<button
+					id="Json-import"
+					class="pain-button"
+					data-tooltip="JSONファイルを読み込み, フォームに情報を反映します."
+				>
+					JSON入力
+				</button>
+				<button
+					id="Json-export"
+					class="pain-button"
+					data-tooltip="フォームに入力された情報をJSONファイルに出力します."
+				>
+					JSON出力
+				</button>
+				<button
+					id="pdf-import"
+					class="pain-button"
+					data-tooltip="現在試験的にtest.jsonの情報をフォームに反映します."
+				>
+					PDF情報転記
+				</button>
 			</div>
 		</div>
 
@@ -328,6 +346,13 @@
 
 			<div id="system-input">
 				<button id="form-apply">科研システム入力</button>
+				<button
+					id="db-updated"
+					class="pain-button"
+					data-tooltip="フォームに入力された課題情報をローカルDBに保存します."
+				>
+					DB更新
+				</button>
 			</div>
 		</div>
 	</div>
@@ -342,6 +367,7 @@
 	<script src="./input_rule.js"></script>
 	<!-- <script src="/datalist.js"></script> -->
 	<script src="./db_fetch.js"></script>
+	<script src="./db_update.js"></script>
 
 
 </body>

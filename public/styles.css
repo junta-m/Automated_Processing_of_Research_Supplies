@@ -206,8 +206,46 @@ button:hover {
 	 transform-origin: center bottom;
 }
 
+.pain-button {
+    width: auto !important; /* 必要な内容の幅に合わせる */
+    white-space: nowrap; /* テキストがボタンの幅を超えた場合、折り返さない */
+	 cursor: pointer;
+	 display: inline-block;
+	 position: relative;
+}
+
+.pain-button::after {
+    content: attr(data-tooltip); /* data-tooltip 属性の値を表示 */
+    position: absolute;
+	 /* ボタンの上に表示 */
+	 bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 5px;
+    white-space: pre-line; /* テキストを折り返す */
+    font-size: 12px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s;
+	 min-width: 200px; /* 最小幅を設定 */
+    max-width: 300px; /* 画面外に飛び出さないように制限 */
+	 word-wrap: normal; /* ハイフンでの折り返しを無効にする */
+	 /* overflow-wrap: break-word; [> 長い単語を折り返す <] */
+	 overflow: hidden;
+	 z-index: 1000;
+	 transform-origin: center bottom;
+}
+
 /* ホバー時に表示 */
 .kadai-button:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+
+.pain-button:hover::after{
     opacity: 1;
     visibility: visible;
 }

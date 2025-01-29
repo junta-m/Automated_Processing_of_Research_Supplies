@@ -1,3 +1,4 @@
+// {{{ function fetchJsonData() {
 function fetchJsonData() {
     fetch("/test.json")
         .then(response => {
@@ -33,7 +34,9 @@ function fetchJsonData() {
             alert("PDF情報の転記中にエラーが発生しました。");
         });
 }
+// }}}
 
+//{{{ function fillItemData(items) {
 // JSON から項目情報を埋める
 function fillItemData(items) {
     items.forEach((item, index) => {
@@ -59,7 +62,9 @@ function fillItemData(items) {
 
     alert("PDF情報を転記しました。");
 }
+// }}}
 
+//{{{ async function fetchResearcherNumberAndProjects(name) {
 // 研究者番号の取得と課題番号の検索
 async function fetchResearcherNumberAndProjects(name) {
     try {
@@ -82,16 +87,23 @@ async function fetchResearcherNumberAndProjects(name) {
         alert("研究者番号の検索中にエラーが発生しました。");
     }
 }
+// }}}
 
-// 研究者番号を元に課題番号を取得してリストに追加
+//{{{ async function fetchProjectsByResearcherNumber(researcherNumber) {
 async function fetchProjectsByResearcherNumber(researcherNumber) {
     try {
         const response = await fetch(`/getProjectsByResearcherNumber?researcherNumber=${researcherNumber}`);
+
+        if (response.status === 404) {
+            console.warn("該当する課題番号が見つかりませんでした。");
+            return;
+        }
+
         if (!response.ok) {
             throw new Error(`課題番号の取得に失敗しました。ステータスコード: ${response.status}`);
         }
-        const data = await response.json();
 
+        const data = await response.json();
         const projectOptions = document.getElementById("projectOptions");
         projectOptions.innerHTML = ""; // 既存の選択肢をクリア
 
@@ -101,12 +113,15 @@ async function fetchProjectsByResearcherNumber(researcherNumber) {
             projectOptions.appendChild(option);
         });
 
+        console.log("課題番号検索結果:", data.projects);
         alert("課題番号を検索候補に追加しました。");
     } catch (error) {
         console.error("エラー:", error);
         alert("課題番号の検索中にエラーが発生しました。");
     }
 }
+
+//}}}
 
 // PDF情報転記ボタンにイベントリスナーを追加
 document.getElementById("pdf-import").addEventListener("click", fetchJsonData);
