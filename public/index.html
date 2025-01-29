@@ -33,7 +33,13 @@
 				<div class="researcher-info">
 					<input type="text" id="研究者番号" placeholder="研究者番号">
 					<input type="text" id="研究者氏名" placeholder="研究者氏名">
-					<button id="研究者番号">研究者番号 CiNii検索</button>
+					<button
+						id="研究者番号"
+						class="kadai-button"
+						data-tooltip="研究者名からCiNiiにアクセスして研究者番号を取得します.検索結果は, ローカルDBに保存されます."
+					>
+						研究者番号 CiNii検索
+					</button>
 				</div>
 
 				<div class="project-search">
@@ -42,8 +48,31 @@
 						<!-- 動的に候補が挿入される -->
 					</datalist>
 
-					<button id="local-db" class="kadai-button">課題 Local DB検索</button>
-					<button id="KAKEN" class="kadai-button">課題 KAKEN検索</button>
+					<button
+						id="asign-info-from-db"
+						class="kadai-button"
+						data-tooltip="課題番号からローカルのDBを利用して課題情報を取得します"
+					>
+						課題情報DB検索
+					</button>
+					<button
+						id="local-db"
+						class="kadai-button"
+						data-tooltip="研究者番号を手入力された際に,
+						課題番号の一覧をローカルDBから取得する為のボタンです."
+						data-html="true"
+					>
+						課題番号DB検索
+					</button>
+					<button
+						id="KAKEN"
+						class="kadai-button"
+						data-tooltip="課題番号を手入力された際に,
+						課題番号の一覧をKAKEN DBから取得する為のボタンです.
+						検索結果は, ローカルDBに保存されます."
+					>
+						課題番号 KAKEN検索
+					</button>
 				</div>
 
 				<div class="input-line">

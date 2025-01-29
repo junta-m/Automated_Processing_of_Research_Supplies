@@ -46,6 +46,36 @@ app.get('/getResearcherNumber', (req, res) => {
     });
 });
 
+// 研究者番号から課題番号を検索
+app.get('/getProjectsByResearcherNumber', (req, res) => {
+    const researcherNumber = req.query.researcherNumber;
+
+    if (!researcherNumber) {
+        return res.status(400).json({ error: '研究者番号が指定されていません。' });
+    }
+
+    // `PI` と `CI` に一致する `AN` を取得
+    const query = `
+        SELECT DISTINCT AN FROM research_projects
+        WHERE PI = ? OR CI = ?
+    `;
+
+    db.all(query, [researcherNumber, researcherNumber], (err, rows) => {
+        if (err) {
+            console.error('データベースエラー:', err);
+            return res.status(500).json({ error: 'データベースエラーが発生しました。' });
+        }
+
+        if (rows.length > 0) {
+            const projectNumbers = rows.map(row => row.AN);
+            res.json({ projects: projectNumbers });
+        } else {
+            res.status(404).json({ error: '該当する課題番号が見つかりませんでした。' });
+        }
+    });
+});
+
+
 // サーバー起動
 app.listen(port, () => {
     console.log(`サーバーが http://localhost:${port} で起動しました`);

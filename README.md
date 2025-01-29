@@ -123,7 +123,7 @@ Promptは以下
 
 ## DB関連
 DBの構成案は以下です.
-+ APRS.dbとして仮置きしてます
++ research.dbとして仮置きしてます
 
 <!-- {{{ ### table: resarch_projects -->
 ### table: resarch_projects
@@ -132,6 +132,7 @@ CREATE TABLE research_projects (
     ID INTEGER PRIMARY KEY AUTOINCREMENT,
     AN TEXT NOT NULL,
     AT TEXT NOT NULL,
+    AName TEXT NOT NULL,
     PI INTEGER NOT NULL,
     CI INTEGER,
     Distributed_Campus TEXT,

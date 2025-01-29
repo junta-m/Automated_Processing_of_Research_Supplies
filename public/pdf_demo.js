@@ -17,46 +17,51 @@ function fetchJsonData() {
                 document.getElementById("payment").value = "業者払い";
             }
 
-            // 共通項目設定
+            // PDF から取得した共通項目を転記
             document.getElementById("支払先").value = extracted.issuer;
             document.getElementById("研究者氏名").value = extracted.receiver_name;
 
-            // 研究者番号の検索と入力
-            fetchResearcherNumber(extracted.receiver_name);
+            // 研究者番号の検索（検索後に課題番号の検索も実行）
+            fetchResearcherNumberAndProjects(extracted.receiver_name);
 
             // 項目情報の転記
-            const items = extracted.items;
-            items.forEach((item, index) => {
-                const rowNumber = String(index + 1).padStart(2, "0"); // 例: "01", "02"
-                document.getElementById(`項目${rowNumber}`).textContent = item.product_name || "";
-                document.getElementById(`メーカー${rowNumber}`).textContent = item.provider || "";
-                document.getElementById(`型番${rowNumber}`).textContent = item.model || "";
-                document.getElementById(`個数${rowNumber}`).textContent = item.number || "";
-                document.getElementById(`単価${rowNumber}`).textContent = item.unite_price || "";
-                document.getElementById(`金額${rowNumber}`).textContent = item.total_price || "";
+            fillItemData(extracted.items);
 
-                // 単価に基づいて費目を選択
-                const unitPrice = parseFloat(item.unite_price) || 0; // 数値に変換
-                const expenseTypeField = document.getElementById(`費目${rowNumber}`);
-                if (unitPrice < 10000) {
-                    expenseTypeField.value = "消耗品";
-                } else if (unitPrice >= 200000) {
-                    expenseTypeField.value = "備品";
-                } else {
-                    expenseTypeField.value = "用品";
-                }
-            });
-
-            alert("PDF情報を転記しました。");
         })
         .catch(error => {
-            console.error(error);
-            alert("エラーが発生しました。");
+            console.error("エラー:", error);
+            alert("PDF情報の転記中にエラーが発生しました。");
         });
 }
 
-// 研究者番号を取得して入力する関数
-async function fetchResearcherNumber(name) {
+// JSON から項目情報を埋める
+function fillItemData(items) {
+    items.forEach((item, index) => {
+        const rowNumber = String(index + 1).padStart(2, "0"); // 例: "01", "02"
+        document.getElementById(`項目${rowNumber}`).textContent = item.product_name || "";
+        document.getElementById(`メーカー${rowNumber}`).textContent = item.provider || "";
+        document.getElementById(`型番${rowNumber}`).textContent = item.model || "";
+        document.getElementById(`個数${rowNumber}`).textContent = item.number || "";
+        document.getElementById(`単価${rowNumber}`).textContent = item.unite_price || "";
+        document.getElementById(`金額${rowNumber}`).textContent = item.total_price || "";
+
+        // 費目の自動選択
+        const unitPrice = parseFloat(item.unite_price) || 0;
+        const expenseTypeField = document.getElementById(`費目${rowNumber}`);
+        if (unitPrice < 10000) {
+            expenseTypeField.value = "消耗品";
+        } else if (unitPrice >= 200000) {
+            expenseTypeField.value = "備品";
+        } else {
+            expenseTypeField.value = "用品";
+        }
+    });
+
+    alert("PDF情報を転記しました。");
+}
+
+// 研究者番号の取得と課題番号の検索
+async function fetchResearcherNumberAndProjects(name) {
     try {
         const response = await fetch(`/getResearcherNumber?name=${encodeURIComponent(name)}`);
         if (!response.ok) {
@@ -66,12 +71,40 @@ async function fetchResearcherNumber(name) {
 
         if (data.researcherNumber) {
             document.getElementById("研究者番号").value = data.researcherNumber;
+
+            // 研究者番号を取得後、課題番号の検索
+            fetchProjectsByResearcherNumber(data.researcherNumber);
         } else {
             alert("該当する研究者番号が見つかりませんでした。");
         }
     } catch (error) {
         console.error("エラー:", error);
         alert("研究者番号の検索中にエラーが発生しました。");
+    }
+}
+
+// 研究者番号を元に課題番号を取得してリストに追加
+async function fetchProjectsByResearcherNumber(researcherNumber) {
+    try {
+        const response = await fetch(`/getProjectsByResearcherNumber?researcherNumber=${researcherNumber}`);
+        if (!response.ok) {
+            throw new Error(`課題番号の取得に失敗しました。ステータスコード: ${response.status}`);
+        }
+        const data = await response.json();
+
+        const projectOptions = document.getElementById("projectOptions");
+        projectOptions.innerHTML = ""; // 既存の選択肢をクリア
+
+        data.projects.forEach(projectNumber => {
+            const option = document.createElement("option");
+            option.value = projectNumber;
+            projectOptions.appendChild(option);
+        });
+
+        alert("課題番号を検索候補に追加しました。");
+    } catch (error) {
+        console.error("エラー:", error);
+        alert("課題番号の検索中にエラーが発生しました。");
     }
 }
 
