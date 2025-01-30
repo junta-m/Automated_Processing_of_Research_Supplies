@@ -1,12 +1,14 @@
 document.getElementById('Json-export').addEventListener('click', function () {
 	// 全ての input と select を取得
-	const inputs = document.querySelectorAll('.right-panel input, .right-panel select');
+	const inputs = document.querySelectorAll('.right-panel input, .right-panel select, .right-panel td[contenteditable="true"]');
+	// const inputs = document.querySelectorAll('.right-panel input, .right-panel select');
 	const data = {};
 
 	// 各 input, select の値を data に格納
 	inputs.forEach(input => {
 		const id = input.id; // 各要素の id
-		const value = input.value; // 各要素の値
+		// const value = input.value; // 各要素の値
+		const value = input.tagName === 'TD' ? input.textContent.trim() : input.value; // td の場合は textContent
 		if (id) { // id がある場合のみ格納
 			data[id] = value;
 		}
