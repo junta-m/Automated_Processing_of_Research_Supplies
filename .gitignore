@@ -6,7 +6,6 @@ yarn-error.log*
 
 # Runtime data
 uploads/
-*.db
 debug-screenshot.png
 error-screenshot.png
 
