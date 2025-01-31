@@ -125,25 +125,22 @@ Promptは以下
 DBの構成案は以下です.
 + research.dbとして仮置きしてます
 
-<!-- {{{ ### table: resarch_projects -->
-### table: resarch_projects
+<!-- {{{ ### table: allocations -->
+### table: allocations
 ```sql
-CREATE TABLE research_projects (
+CREATE TABLE allocations (
     ID INTEGER PRIMARY KEY AUTOINCREMENT,
-    AN TEXT NOT NULL,
-    AT TEXT NOT NULL,
-    AName TEXT NOT NULL,
+    PN TEXT NOT NULL,
     PI INTEGER NOT NULL,
     CI INTEGER,
-    Distributed_Campus TEXT,
-    Distributed_Location TEXT,
-    Installed_Campus TEXT,
-    Installed_Location TEXT
+    distributed_campus TEXT,
+    distributed_location TEXT,
+    installed_campus TEXT,
+    installed_location TEXT
 );
 ```
 
-+ AN: Assignment Number
-+ AT: Assignment Type
++ PN: Projects Number
 + PI: Principle Investigator
 + CI: Co-Investigator
 + 若手や学振のように, 単独の研究用の科研費があるので, 分担者はNULLを許容します.
@@ -153,11 +150,12 @@ CREATE TABLE research_projects (
 ご入力をさける為, KAKEN apiの利用を念頭に置きたいと考えています.
 <!-- }}} -->
 
-### resarcher_numbers
+<!-- {{{ ### resarchers -->
+### resarchers
 ```sql
-CREATE TABLE resarcher_numbers (
-    RN INTEGER PRIMARY KEY,
-    Name TEXT NOT NULL
+CREATE TABLE resarchers (
+    number INTEGER PRIMARY KEY,
+    name TEXT NOT NULL
 );
 ```
 
@@ -167,6 +165,19 @@ CREATE TABLE resarcher_numbers (
 + アルファベットの場合は, 姓名の最初を大文字とし, 空白は利用しない方向で検討
 + ミドルネームなどは, 書類上対応しない方向で検討
 + 苗字のみの書類は, 対応しない方向で検討
+<!-- }}} -->
+
+<!-- {{{ ### projects -->
+### projects
+```sql
+CREATE TABLE projects (
+    number TEXT PRIMARY KEY,
+    title TEXT NOT NULL,
+    name TEXT NOT NULL
+);
+```
+<!-- }}} -->
+
 
 ## 科研費の処理系
 
