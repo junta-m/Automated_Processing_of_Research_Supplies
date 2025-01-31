@@ -3,6 +3,8 @@ const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const app = express();
 const port = process.env.PORT || 3000;
+const axios = require('axios');
+const { exec } = require('child_process');
 
 // SQLite データベース接続
 const db = new sqlite3.Database(path.join(__dirname, '../research.db'), (err) => {
@@ -206,6 +208,61 @@ app.get('/fetchResearcherName', (req, res) => {
             res.status(404).json({ error: 'DB未登録' });
         }
     });
+});
+// }}}
+
+//{{{ app.get('/searchResearcherNumber', async (req, res) => {
+app.get('/searchResearcherNumber', async (req, res) => {
+    let name = req.query.name;
+    if (!name || name.trim() === "") {
+        return res.status(400).json({ error: '研究者氏名を入力してください。' });
+    }
+
+    name = name.replace(/\s+/g, ""); // 空白を削除
+    const apiUrl = `https://nrid.nii.ac.jp/opensearch/?format=json&qg=${encodeURIComponent(name)}&appid=${process.env.KAKENAPI}`;
+
+    try {
+        const response = await axios.get(apiUrl);
+        const data = response.data;
+
+        if (!data || !data.totalResults) {
+            return res.json({ message: '検索結果なし', personIds: [] });
+        }
+
+        const totalResults = data.totalResults;
+        const researcherIds = data.researchers.map(r => r["id:person:erad"]);
+
+        let processedCount = 0;
+        researcherIds.forEach(personId => {
+            if (Array.isArray(personId)) {
+                personId = personId[0];
+            }
+            personId = personId.toString();
+
+            db.get(`SELECT RN FROM researcher_numbers WHERE RN = ?`, [personId], (err, row) => {
+                if (err) {
+                    console.error('DBエラー:', err);
+                    return;
+                }
+                if (!row) {
+                    db.run(`INSERT INTO researcher_numbers (RN, Name) VALUES (?, ?)`, [personId, name], (insertErr) => {
+                        if (insertErr) {
+                            console.error('DB挿入エラー:', insertErr);
+                        } else {
+                            console.log(`新しい研究者番号を追加: RN=${personId}, Name=${name}`);
+                        }
+                    });
+                }
+                processedCount++;
+                if (processedCount === researcherIds.length) {
+                    res.json({ totalResults, researcherIds });
+                }
+            });
+        });
+    } catch (error) {
+        console.error('APIエラー:', error);
+        res.status(500).json({ error: 'API取得エラーが発生しました。' });
+    }
 });
 // }}}
 
