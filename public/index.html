@@ -49,11 +49,29 @@
 			<div class="form-section">
 
 				<div class="researcher-info">
-					<input type="text" id="研究者番号" placeholder="研究者番号">
+					<input
+						id="研究者番号"
+						list="reseacrcher-options"
+						placeholder="研究者番号"
+						data-tooltip="
+							研究者名からローカルかCiNiiのDBから候補を取得します.
+							候補が表示されない場合は, 手入力してください.
+						"
+					>
+
+					<!--
+						同姓同名がいる可能性を含めて,
+						ここはdatalistを用意しています.
+						候補が１つの場合は値が自動入力されます.
+					-->
+
+					<datalist id="reseacrcher-options">
+						<!-- 動的に候補が挿入される -->
+					</datalist>
+
 					<input type="text" id="研究者氏名" placeholder="研究者氏名">
 					<button
-						id="研究者番号"
-						class="kadai-button"
+						id="研究者番号CiNii検索"
 						data-tooltip="研究者名からCiNiiにアクセスして研究者番号を取得します.検索結果は, ローカルDBに保存されます."
 					>
 						研究者番号 CiNii検索
@@ -69,12 +87,15 @@
 					<button
 						id="asign-info-from-db"
 						class="kadai-button"
-						data-tooltip="課題番号からローカルのDBを利用して課題情報を取得します"
+						data-tooltip="課題番号からローカルのDBから
+								課題情報を取得します.
+								課題番号を選択・入力後に
+								このボタンを押してください."
 					>
 						課題情報DB検索
 					</button>
 					<button
-						id="local-db"
+						id="local-an-fetch"
 						class="kadai-button"
 						data-tooltip="研究者番号を手入力された際に,
 						課題番号の一覧をローカルDBから取得する為のボタンです."
@@ -357,18 +378,20 @@
 		</div>
 	</div>
 
-	<!-- <script src="/client.js"></script> -->
 	<script src="./json_imp.js"></script>
 	<script src="./json_exp.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.15.349/pdf.min.js"></script>
 	<script src="./pdf_preview.js"></script>
-	<!-- <script src="/zoom.js"></script> -->
+	<script src="./zoom.js"></script>
 	<script src="./pdf_demo.js"></script>
 	<script src="./input_rule.js"></script>
-	<!-- <script src="/datalist.js"></script> -->
 	<script src="./db_fetch.js"></script>
-	<script src="./db_update.js"></script>
+	<script src="./local_an_fetch.js"></script>
+	<script src="./rn_cinii_fetch_update.js"></script>
 
+	<!-- <script src="/client.js"></script> -->
+	<!-- <script src="./db_update.js"></script> -->
+	<!-- <script src="/datalist.js"></script> -->
 
 </body>
 

@@ -60,6 +60,7 @@ body {
 	/* margin-bottom: 20px; */
 }
 
+/* {{{ input */
 input[type="text"],
 input[type="file"] {
 	width: 100%;
@@ -78,7 +79,9 @@ input[list] {
 	border: 1px solid #ddd; /* 枠線 */
 	border-radius: 4px; /* 角を丸くする */
 }
+/* }}} */
 
+/* {{{ select { */
 select {
 	width:fit-content;
 	height: 34px;
@@ -100,8 +103,9 @@ select.item_type {
 	box-sizing: border-box; /* パディングを含めた幅の計算 */
 	appearance: auto; /* ブラウザのデフォルトスタイルを無効化（任意） */
 }
+/* }}} */
 
-
+/* {{{ button */
 button {
 	background-color: #4CAF50;
 	color: white;
@@ -122,6 +126,7 @@ button:hover {
 	gap: 10px;
 	align-items: center;
 }
+/* }}} */
 /* }}} */
 
 /* .representatives { */
