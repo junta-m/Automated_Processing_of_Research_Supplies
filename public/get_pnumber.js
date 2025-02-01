@@ -38,10 +38,18 @@ document.addEventListener("DOMContentLoaded", function() {
                     projectOptions.appendChild(option);
                 });
 
-                // `datalist` の変更を認識させる
-                document.getElementById("研究課題番号").setAttribute("list", "projectOptions");
+					// 検索結果が0件の場合、警告を表示
+					// 検索結果が1件の場合、課題番号を自動入力
+					// 複数件の場合はdatalistを表示
+					if (data.projects.length === 0) {
+						alert("該当する課題番号が見つかりませんでした。");
+					} else if (data.projects.length === 1) {
+						document.getElementById("研究課題番号").value = data.projects[0];
+					} else {
+						document.getElementById("研究課題番号").setAttribute("list", "projectOptions");
+						alert("課題番号候補を追加したので,選択してください. 候補にない場合は情報を入力してください.");
+					}
 
-                alert("課題番号候補を更新しました。");
             })
             .catch(error => {
                 console.error("データ取得エラー:", error);
