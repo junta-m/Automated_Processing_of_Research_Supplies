@@ -6,7 +6,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 const axios = require('axios');
 const { exec } = require('child_process');
-const xml2js = require("xml2js");
+const { XMLParser } = require("fast-xml-parser");
 
 // SQLite データベース接続
 const db = new sqlite3.Database(path.join(__dirname, '../ARPS.db'), (err) => {
@@ -318,67 +318,84 @@ app.get('/searchResearcherNumber', async (req, res) => {
 // }}}
 
 //{{{ app.post("/searchProject", async (req, res) => {
-app.post("/searchProject", async (req, res) => {
+app.get("/searchProject", async (req, res) => {
     try {
-        console.log("searchProject API called with request body:", req.body);
+        console.log("searchProject API called with query parameters:", req.query);
 
-        const { researcherNumber } = req.body;
+        const researcherNumber = req.query.researcherNumber;
         if (!researcherNumber) {
             return res.status(400).json({ error: "研究者番号が必要です" });
         }
 
         // KAKEN API へのリクエスト
         const kakenApiUrl = `https://kaken.nii.ac.jp/opensearch/?format=xml&qm=${encodeURIComponent(researcherNumber)}&c1=granted&appid=${process.env.KAKENAPI}`;
-        const response = await axios.get(kakenApiUrl);
+        console.log("Requesting KAKEN API:", kakenApiUrl);
 
+        const response = await axios.get(kakenApiUrl);
         if (response.status !== 200) {
             throw new Error(`KAKEN API エラー: ${response.status} ${response.statusText}`);
         }
 
         const xmlData = response.data;
-        console.log("取得したXMLデータ:", xmlData); // デバッグ用
+        console.log("取得した XML データ:\n", xmlData);
 
         if (!xmlData || xmlData.trim() === "") {
             throw new Error("KAKEN API からのレスポンスが空です");
         }
 
         // XML を JSON に変換
-        xml2js.parseString(xmlData, { explicitArray: false }, (err, result) => {
-            if (err) {
-                console.error("XML 解析エラー:", err);
-                return res.status(500).json({ error: "XML の解析に失敗しました" });
-            }
+        const parser = new XMLParser({ ignoreAttributes: false });
+        const jsonData = parser.parse(xmlData);
+        console.log("XML 解析結果:", JSON.stringify(jsonData, null, 2));
 
-            const grants = result?.feed?.entry || [];
-            if (!grants.length) {
-                return res.status(404).json({ error: "KAKEN API に課題番号がありません" });
-            }
+        const grants = jsonData?.grantAwards?.grantAward;
+        if (!grants) {
+            return res.status(404).json({ error: "該当する課題番号が見つかりませんでした" });
+        }
 
-            let projectNumbers = [];
-            grants.forEach(grant => {
-                if (grant["grantAward"]) {
-                    const awardNumber = grant["grantAward"]["$"]["awardNumber"];
-                    if (awardNumber) {
-                        projectNumbers.push(awardNumber);
-                    }
-                }
+        let projects = [];
+
+        const processGrant = (grant) => {
+            const awardNumber = grant["@_awardNumber"] || "不明";
+            const summary = Array.isArray(grant?.summary) ? grant.summary[0] : grant?.summary || {};
+            const title = summary?.title || "タイトルなし";
+
+            // `category` の `#text` を取得
+            const category = typeof summary?.category === "object" ? summary.category["#text"] || "カテゴリーなし" : summary?.category || "カテゴリーなし";
+
+            // `researcherId` の `#text` を取得
+            const member = Array.isArray(summary?.member) ? summary.member[0] : summary?.member || {};
+            const researcherId = typeof member?.enriched?.researcherNumber === "object" ? member.enriched.researcherNumber["#text"] || "不明" : member?.enriched?.researcherNumber || "不明";
+            const researcherName = member?.personalName?.fullName || "不明";
+
+            projects.push({
+                awardNumber,
+                title,
+                category,
+                researcherId,
+                researcherName
             });
+        };
 
-            console.log("取得した課題番号:", projectNumbers);
+        if (Array.isArray(grants)) {
+            grants.forEach(processGrant);
+        } else {
+            processGrant(grants);
+        }
 
-            if (!projectNumbers.length) {
-                return res.status(404).json({ error: "課題番号が見つかりませんでした" });
-            }
+        console.log("取得した課題情報:", projects);
 
-            res.json({ projectNumbers });
-        });
+        if (projects.length === 0) {
+            return res.status(404).json({ error: "課題番号が見つかりませんでした" });
+        }
+
+        res.json({ projects });
 
     } catch (error) {
         console.error("サーバーエラー:", error);
         res.status(500).json({ error: error.message });
     }
 });
-
 //}}}
 
 // サーバー起動
