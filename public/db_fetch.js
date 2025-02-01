@@ -6,7 +6,7 @@ document.getElementById("asign-info-from-db").addEventListener("click", async fu
     }
 
     try {
-        let response = await fetch(`/fetchProjectInfo?projectNumber=${projectNumber}`);
+        let response = await fetch(`/getProjectInfo?projectNumber=${projectNumber}`);
         let data = await response.json();
 
         if (!response.ok) {
@@ -25,7 +25,7 @@ document.getElementById("asign-info-from-db").addEventListener("click", async fu
         document.getElementById("設置先").value = data.設置先 || "";
 
         if (data.PI) {
-            let piResponse = await fetch(`/fetchResearcherName?researcherId=${data.PI}`);
+            let piResponse = await fetch(`/getResearcherName?researcherId=${data.PI}`);
             let piData = await piResponse.json();
             document.getElementById("代表者").value = piData.name || "DB未登録";
         } else {
@@ -33,7 +33,7 @@ document.getElementById("asign-info-from-db").addEventListener("click", async fu
         }
 
         if (data.CI) {
-            let ciResponse = await fetch(`/fetchResearcherName?researcherId=${data.CI}`);
+            let ciResponse = await fetch(`/getResearcherName?researcherId=${data.CI}`);
             let ciData = await ciResponse.json();
             document.getElementById("分担者").value = ciData.name || "DB未登録";
         }

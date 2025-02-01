@@ -125,25 +125,22 @@ Promptは以下
 DBの構成案は以下です.
 + research.dbとして仮置きしてます
 
-<!-- {{{ ### table: resarch_projects -->
-### table: resarch_projects
+<!-- {{{ ### table: allocations -->
+### table: allocations
 ```sql
-CREATE TABLE research_projects (
+CREATE TABLE allocations (
     ID INTEGER PRIMARY KEY AUTOINCREMENT,
-    AN TEXT NOT NULL,
-    AT TEXT NOT NULL,
-    AName TEXT NOT NULL,
+    PN TEXT NOT NULL,
     PI INTEGER NOT NULL,
     CI INTEGER,
-    Distributed_Campus TEXT,
-    Distributed_Location TEXT,
-    Installed_Campus TEXT,
-    Installed_Location TEXT
+    distributed_campus TEXT,
+    distributed_location TEXT,
+    installed_campus TEXT,
+    installed_location TEXT
 );
 ```
 
-+ AN: Assignment Number
-+ AT: Assignment Type
++ PN: Projects Number
 + PI: Principle Investigator
 + CI: Co-Investigator
 + 若手や学振のように, 単独の研究用の科研費があるので, 分担者はNULLを許容します.
@@ -153,11 +150,12 @@ CREATE TABLE research_projects (
 ご入力をさける為, KAKEN apiの利用を念頭に置きたいと考えています.
 <!-- }}} -->
 
-### resarcher_numbers
+<!-- {{{ ### resarchers -->
+### resarchers
 ```sql
-CREATE TABLE resarcher_numbers (
-    RN INTEGER PRIMARY KEY,
-    Name TEXT NOT NULL
+CREATE TABLE resarchers (
+    number INTEGER PRIMARY KEY,
+    name TEXT NOT NULL
 );
 ```
 
@@ -167,6 +165,19 @@ CREATE TABLE resarcher_numbers (
 + アルファベットの場合は, 姓名の最初を大文字とし, 空白は利用しない方向で検討
 + ミドルネームなどは, 書類上対応しない方向で検討
 + 苗字のみの書類は, 対応しない方向で検討
+<!-- }}} -->
+
+<!-- {{{ ### projects -->
+### projects
+```sql
+CREATE TABLE projects (
+    number TEXT PRIMARY KEY,
+    title TEXT NOT NULL,
+    name TEXT NOT NULL
+);
+```
+<!-- }}} -->
+
 
 ## 科研費の処理系
 
@@ -205,6 +216,116 @@ CREATE TABLE resarcher_numbers (
 | `db-updated`             | フォームの内容をDBへ更新          | `db_update.js` |
 <!-- }}} -->
 
+<!-- {{{ ## API -->
+## API Documentation
+
+### 概要
+この API は科研費データベースと連携し、研究者情報や研究課題情報を取得する機能を提供します。
+サーバーは `Express.js` を使用して構築され、データベースとして `SQLite` を使用しています。
+
+### 環境変数
+この API を実行するには `.env` ファイルを作成し、以下の環境変数を設定してください。
+
+```
+PORT=3000
+KAKENAPI=your_api_key_here
+```
+
+### エンドポイント一覧
+
+#### 研究者関連エンドポイント
+
+##### 研究者番号を取得
+**GET `/getResearcherNumber`**
+
+**クエリパラメータ:**
+- `name`: 研究者氏名（必須）
+
+**レスポンス:**
+- 成功: `{ researcherNumber: "123456" }`
+- 失敗: `{ error: "研究者番号が見つかりませんでした。" }`
+
+##### 研究者名を取得
+**GET `/getResearcherName`**
+
+**クエリパラメータ:**
+- `researcherNumber`: 研究者番号（必須）
+
+**レスポンス:**
+- 成功: `{ 研究者: "田中太郎" }`
+- 失敗: `{ 研究者: "DB未登録" }`
+
+##### 研究者番号を外部APIから検索
+**GET `/searchResearcherNumber`**
+
+**クエリパラメータ:**
+- `name`: 研究者氏名（必須）
+
+**レスポンス:**
+- 成功: `{ totalResults: 1, researcherIds: ["123456"] }`
+- 失敗: `{ error: "API取得エラーが発生しました。" }`
+
+---
+
+#### 研究課題関連エンドポイント
+
+##### 課題番号から研究者の課題情報を取得
+**GET `/getProjectsByResearcherNumber`**
+
+**クエリパラメータ:**
+- `researcherNumber`: 研究者番号（必須）
+
+**レスポンス:**
+- 成功: `{ projects: ["K12345", "K67890"] }`
+- 失敗: `{ error: "該当する課題番号が見つかりませんでした。" }`
+
+##### 課題番号から課題情報を取得
+**GET `/getProject`**
+
+**クエリパラメータ:**
+- `projectNumber`: 課題番号（必須）
+
+**レスポンス:**
+- 成功: `{ 課題種別: "基盤研究(A)", 課題名: "先端AI技術の研究" }`
+- 失敗: `{ error: "DB未登録" }`
+
+##### 課題番号から課題の配分情報を取得
+**GET `/getAllocation`**
+
+**クエリパラメータ:**
+- `projectNumber`: 課題番号（必須）
+
+**レスポンス:**
+- 成功:
+```json
+{
+  "納品キャンパス": "深草",
+  "納品先": "3号館",
+  "設置キャンパス": "瀬田",
+  "設置先": "5号館",
+  "PI": "123456",
+  "CI": "789012"
+}
+```
+- 失敗: `{ error: "DB未登録" }`
+
+---
+
+#### その他
+
+##### サーバー起動方法
+```
+npm install
+node server.js
+```
+サーバーが `http://localhost:3000` で起動します。
+
+---
+
+この API は科研費データベースを利用した研究者および課題管理を簡単に行えるように設計されています。
+
+
+<!-- }}} -->
 
 ## Discussion
 ### UI
