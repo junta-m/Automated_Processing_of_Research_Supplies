@@ -6,6 +6,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 const axios = require('axios');
 const { exec } = require('child_process');
+const xml2js = require("xml2js");
 
 // SQLite データベース接続
 const db = new sqlite3.Database(path.join(__dirname, '../ARPS.db'), (err) => {
@@ -27,8 +28,92 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
+
+
 //serch: 外部apiからデータを取得
 //get: local dbからデータを取得
+//update: local dbにデータを更新
+
+// {{{ app.post('/updateProject', (req, res) => {
+app.post('/updateProject', (req, res) => {
+    const { projectNumber, projectType, projectTitle } = req.body;
+
+    if (!projectNumber || !projectType || !projectTitle) {
+        return res.status(400).json({ error: '全ての項目を入力してください。' });
+    }
+
+    const query = `
+        INSERT INTO projects (pnumber, ptype, ptitle)
+        VALUES (?, ?, ?)
+        ON CONFLICT(pnumber) DO UPDATE SET
+        ptype = excluded.ptype,
+        ptitle = excluded.ptitle
+    `;
+
+    db.run(query, [projectNumber, projectType, projectTitle], function (err) {
+        if (err) {
+            console.error('データベースエラー:', err);
+            return res.status(500).json({ error: 'データベースエラーが発生しました。' });
+        }
+        res.json({ message: '課題情報が更新されました。' });
+    });
+});
+// }}}
+
+// {{{ app.post('/updateAllocation', (req, res) => {
+app.post('/updateAllocation', (req, res) => {
+    const { projectNumber, distributedCampus, distributedLocation, installedCampus, installedLocation, PI, CI } = req.body;
+
+    if (!projectNumber || !distributedCampus || !distributedLocation || !installedCampus || !installedLocation) {
+        return res.status(400).json({ error: '全ての項目を入力してください。' });
+    }
+
+    const query = `
+        INSERT INTO allocations (pnumber, distributed_campus, distributed_location, installed_campus, installed_location, PI, CI)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT(pnumber) DO UPDATE SET
+        distributed_campus = excluded.distributed_campus,
+        distributed_location = excluded.distributed_location,
+        installed_campus = excluded.installed_campus,
+        installed_location = excluded.installed_location,
+        PI = excluded.PI,
+        CI = excluded.CI
+    `;
+
+    db.run(query, [projectNumber, distributedCampus, distributedLocation, installedCampus, installedLocation, PI, CI], function (err) {
+        if (err) {
+            console.error('データベースエラー:', err);
+            return res.status(500).json({ error: 'データベースエラーが発生しました。' });
+        }
+        res.json({ message: '課題割り当て情報が更新されました。' });
+    });
+});
+// }}}
+
+// {{{ app.post('/updateResearcher', (req, res) => {
+app.post('/updateResearcher', (req, res) => {
+    const { researcherNumber, researcherName } = req.body;
+
+    if (!researcherNumber || !researcherName) {
+        return res.status(400).json({ error: '研究者番号と氏名を入力してください。' });
+    }
+
+    const query = `
+        INSERT INTO researchers (rnumber, rname)
+        VALUES (?, ?)
+        ON CONFLICT(rnumber) DO UPDATE SET
+        rname = excluded.rname
+    `;
+
+    db.run(query, [researcherNumber, researcherName], function (err) {
+        if (err) {
+            console.error('データベースエラー:', err);
+            return res.status(500).json({ error: 'データベースエラーが発生しました。' });
+        }
+        res.json({ message: '研究者情報が更新されました。' });
+    });
+});
+// }}}
 
 // {{{ app.get('/getProjectsByResearcherNumber', (req, res) => {
 app.get('/getProjectsByResearcherNumber', (req, res) => {
@@ -231,6 +316,70 @@ app.get('/searchResearcherNumber', async (req, res) => {
     }
 });
 // }}}
+
+//{{{ app.post("/searchProject", async (req, res) => {
+app.post("/searchProject", async (req, res) => {
+    try {
+        console.log("searchProject API called with request body:", req.body);
+
+        const { researcherNumber } = req.body;
+        if (!researcherNumber) {
+            return res.status(400).json({ error: "研究者番号が必要です" });
+        }
+
+        // KAKEN API へのリクエスト
+        const kakenApiUrl = `https://kaken.nii.ac.jp/opensearch/?format=xml&qm=${encodeURIComponent(researcherNumber)}&c1=granted&appid=${process.env.KAKENAPI}`;
+        const response = await axios.get(kakenApiUrl);
+
+        if (response.status !== 200) {
+            throw new Error(`KAKEN API エラー: ${response.status} ${response.statusText}`);
+        }
+
+        const xmlData = response.data;
+        console.log("取得したXMLデータ:", xmlData); // デバッグ用
+
+        if (!xmlData || xmlData.trim() === "") {
+            throw new Error("KAKEN API からのレスポンスが空です");
+        }
+
+        // XML を JSON に変換
+        xml2js.parseString(xmlData, { explicitArray: false }, (err, result) => {
+            if (err) {
+                console.error("XML 解析エラー:", err);
+                return res.status(500).json({ error: "XML の解析に失敗しました" });
+            }
+
+            const grants = result?.feed?.entry || [];
+            if (!grants.length) {
+                return res.status(404).json({ error: "KAKEN API に課題番号がありません" });
+            }
+
+            let projectNumbers = [];
+            grants.forEach(grant => {
+                if (grant["grantAward"]) {
+                    const awardNumber = grant["grantAward"]["$"]["awardNumber"];
+                    if (awardNumber) {
+                        projectNumbers.push(awardNumber);
+                    }
+                }
+            });
+
+            console.log("取得した課題番号:", projectNumbers);
+
+            if (!projectNumbers.length) {
+                return res.status(404).json({ error: "課題番号が見つかりませんでした" });
+            }
+
+            res.json({ projectNumbers });
+        });
+
+    } catch (error) {
+        console.error("サーバーエラー:", error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+//}}}
 
 // サーバー起動
 app.listen(port, () => {
