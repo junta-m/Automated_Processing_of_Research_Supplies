@@ -32,8 +32,10 @@ document.getElementById("研究者番号CiNii検索").addEventListener("click", 
 				if (data.totalResults === 1) {
 					document.getElementById("研究者番号").value = data.researcherIds[0].toString();
 				}
-
-            alert("研究者番号を取得しました。");
+				// 候補が複数ある場合はalert
+				else {
+					alert("候補が複数あります。");
+				}
         } else {
             alert("検索結果なし。");
         }

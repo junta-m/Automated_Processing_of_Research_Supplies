@@ -5,6 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>科研費自動化システム</title>
+	<!-- <link rel="stylesheet" href="styles.css"> -->
 	<link rel="stylesheet" href="./styles.css">
 </head>
 
@@ -85,7 +86,8 @@
 					>
 
 					<datalist id="project-options">
-						<!-- 動的に候補が挿入される -->
+						<option value="基盤研究(S)" label="基盤研究(S)"></option>
+						<option value="基盤研究(SSS)" label="基盤研究(SSS)"></option>
 					</datalist>
 
 					<button
@@ -160,7 +162,7 @@
 					</div>
 
 					<div class="input-line-group">
-						<label for="設置キャンパス">設置</label>
+						<span>設置</span>
 						<select id="設置キャンパス">
 							<option value="瀬田">瀬田</option>
 							<option value="深草">深草</option>
@@ -386,33 +388,6 @@
 		</div>
 	</div>
 
-	<script src="./json_imp.js"></script>
-	<script src="./json_exp.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.15.349/pdf.min.js"></script>
-	<script src="./pdf_preview.js"></script>
-	<script src="./zoom.js"></script>
-	<script src="./pdf_demo.js"></script>
-	<script src="./input_rule.js"></script>
-
-	<!-- get: local db だけを利用 -->
-	<!-- search: web api だけを利用 -->
-	<!-- get_search: local db と web api の両方を利用 -->
-
-	<!-- 課題情報DB検索用js -->
-	<script src="./get_project_allocation.js"></script>
-
-	<!-- 課題番号DB検索用js -->
-	<script src="./get_pnumber.js"></script>
-
-	<!-- 研究者番号CiNii検索用js -->
-	<script src="./search_rnumber.js"></script>
-
-	<!-- 課題番号KAKEN検索用js -->
-	<script src="./search_projects.js"></script>
-
-	<!-- <script src="/client.js"></script> -->
-	<!-- <script src="./db_update.js"></script> -->
-	<!-- <script src="/datalist.js"></script> -->
 
 </body>
 
