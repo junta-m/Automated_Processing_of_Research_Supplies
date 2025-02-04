@@ -254,7 +254,7 @@ app.get('/getProjectsByResearcherNumber', (req, res) => {
 
 	const query = `
 		SELECT DISTINCT pnumber FROM allocations
-		WHERE PI = ? OR CI = ?
+		WHERE PI = ? OR CI = ?;
 	`;
 
 	db.all(query, [researcherNumber, researcherNumber], (err, rows) => {
@@ -310,16 +310,18 @@ app.get('/getResearcherNumber', (req, res) => {
 		return res.status(400).json({ error: '研究者氏名を入力してください。' });
 	}
 
-	const query = `SELECT name FROM researchers WHERE Name = ?`;
+	const query = `SELECT rnumber FROM researchers WHERE rname = "?"`;
 
-	db.get(query, [name], (err, row) => {
+	db.get(query, name, (err, row) => {
 		if (err) {
 			console.error('データベースエラー:', err);
 			return res.status(500).json({ error: 'データベースエラーが発生しました。' });
 		}
 
 		if (row) {
-			res.json({ researcherNumber: row.RN });
+			// row.rnumber は数値型なので文字列に変換して返す
+			console.log(`研究者番号取得成功: ${row.rnumber}`);
+			res.json({ 研究者番号: row.rnumber.toString() });
 		} else {
 			res.status(404).json({ error: '研究者番号が見つかりませんでした。' });
 		}

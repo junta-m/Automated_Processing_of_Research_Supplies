@@ -92,7 +92,7 @@ async function fetchResearcherNumberAndProjects(name) {
 //{{{ async function fetchProjectsByResearcherNumber(researcherNumber) {
 async function fetchProjectsByResearcherNumber(researcherNumber) {
     try {
-        const response = await fetch(`/getProjectsByResearcherNumber?researcherNumber=${researcherNumber}`);
+        const response = await fetch(`/getProjectsResearcherNumber?researcherNumber=${researcherNumber}`);
 
         if (response.status === 404) {
             console.warn("該当する課題番号が見つかりませんでした。");
@@ -117,7 +117,7 @@ async function fetchProjectsByResearcherNumber(researcherNumber) {
         alert("課題番号を検索候補に追加しました。");
     } catch (error) {
         console.error("エラー:", error);
-        alert("課題番号の検索中にエラーが発生しました。");
+        alert("a課題番号の検索中にエラーが発生しました。");
     }
 }
 
