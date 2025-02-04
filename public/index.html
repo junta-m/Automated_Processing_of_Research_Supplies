@@ -82,11 +82,16 @@
 						id="研究課題番号"
 						list="project-options"
 						placeholder="研究課題番号"
+						autoComplete="new-password"
 					>
 
 					<datalist id="project-options">
 						<!-- 動的に候補が挿入される -->
+						<option>t</option>
+						<option>e</option>
+						<option>s</option>
 					</datalist>
+					<input type="text" name="dummy" style="display:none"><br>
 
 					<button
 						id="asign-info-from-db"
@@ -409,6 +414,9 @@
 
 	<!-- 課題番号KAKEN検索用js -->
 	<script src="./search_projects.js"></script>
+
+	<!-- auto completeをoff? -->
+	<script src="./autocomplete.js"></script>
 
 	<!-- <script src="/client.js"></script> -->
 	<!-- <script src="./db_update.js"></script> -->
