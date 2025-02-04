@@ -91,8 +91,6 @@ app.post('/updateProject', (req, res) => {
 		INSERT INTO projects (pnumber, ptype, ptitle)
 		VALUES (?, ?, ?)
 		ON CONFLICT(pnumber) DO UPDATE SET
-		ptype = excluded.ptype,
-		ptitle = excluded.ptitle
 	`;
 
 	db.run(query, [projectNumber, projectType, projectTitle], function (err) {
@@ -244,12 +242,15 @@ app.post('/updateResearcher', (req, res) => {
 });
 // }}}
 
-// {{{ app.get('/getProjectsByResearcherNumber', (req, res) => {
-app.get('/getProjectsByResearcherNumber', (req, res) => {
-	const researcherNumber = req.query.researcherNumber;
+// {{{ app.get('/allocations:get:pnumber', (req, res) => {
+app.get('/allocations:get:pnumber', (req, res) => {
+	//allocations:get:pnumber?rnumber=研究者番号
+	//allocationsテーブルから研究者番号に対応する課題番号を取得
+	//output: { 課題番号: [課題番号1, 課題番号2, ...] }
+	const rnumber = req.query.rnumber;
 
-	if (!researcherNumber) {
-		return res.status(400).json({ error: '研究者番号が指定されていません。' });
+	if (!rnumber) {
+		return res.status(400).json({ error: '研究者番号が指定されていません。'});
 	}
 
 	const query = `
@@ -257,16 +258,17 @@ app.get('/getProjectsByResearcherNumber', (req, res) => {
 		WHERE PI = ? OR CI = ?;
 	`;
 
-	db.all(query, [researcherNumber, researcherNumber], (err, rows) => {
+	db.all(query, [rnumber, rnumber], (err, rows) => {
 		if (err) {
 			console.error('データベースエラー:', err);
-			return res.status(500).json({ error: 'データベースエラーが発生しました。' });
+			return res.status(500).json({ error: 'データベースエラーが発生しました。'});
 		}
 
 		if (rows.length > 0) {
-			const projectNumbers = rows.map(row => row.pnumber);
-			console.log(`検索結果: ${JSON.stringify(projectNumbers)}`);
-			res.json({ projects: projectNumbers });
+			const pnumber = rows.map(row => row.pnumber);
+			console.log(`allocatos:get-検索結果: ${JSON.stringify(pnumber)}`);
+			// 返り値の形式は { pnumbers: [課題番号1, 課題番号2, ...] }
+			res.json({ pnumbers: pnumber });
 		} else {
 			console.error(`該当する課題番号が見つかりませんでした: 研究者番号=${researcherNumber}`);
 			res.status(404).json({ error: '該当する課題番号が見つかりませんでした。' });
@@ -275,17 +277,21 @@ app.get('/getProjectsByResearcherNumber', (req, res) => {
 });
 // }}}
 
-// {{{ app.get('/getResearcherName', (req, res) => {
-app.get('/getResearcherName', (req, res) => {
-	const researcherNumber = req.query.researcherNumber;
+// {{{ app.get('/researchers:get:rname', (req, res) => {
+app.get('/researchers:get:rname', (req, res) => {
+	//researchers:get:rname?rnumber=研究者番号
+	//researchersテーブルから研究者氏名を取得
+	//output: { 研究者: 研究者氏名 }
+	const rnumber = req.query.rnumber;
 
-	if (!researcherNumber) {
+	// 研究者番号が指定されていない場合はエラー
+	if (!rnumber) {
 		return res.status(400).json({ error: '研究者番号を指定してください。' });
 	}
 
 	const query = `SELECT rname FROM researchers WHERE rnumber = ?`;
 
-	db.get(query, [researcherNumber], (err, row) => {
+	db.get(query, [rnumber], (err, row) => {
 		if (err) {
 			console.error('データベースエラー:', err);
 			return res.status(500).json({ error: 'データベースエラーが発生しました。' });
@@ -295,79 +301,92 @@ app.get('/getResearcherName', (req, res) => {
 			console.log(`研究者情報取得成功: ${JSON.stringify(row)}`);
 			res.json({ 研究者: row.rname });
 		} else {
-			console.error(`研究者情報が見つかりません: 研究者番号=${researcherNumber}`);
+			console.error(`研究者情報が見つかりません: 研究者番号=${rnumber}`);
 			res.json({ 研究者: 'DB未登録' });
 		}
 	});
 });
 // }}}
 
-//{{{ app.get('/getResearcherNumber', (req, res) => {
-app.get('/getResearcherNumber', (req, res) => {
-	const name = req.query.name;
+//{{{ app.get('/researchers:get:rnumber', (req, res) => {
+app.get('/researchers:get:rnumber', (req, res) => {
+	//researchers:get:rnumber?rname=研究者氏名
+	//でresearchersテーブルから研究者番号を取得
+	const name = req.query.rname;
 
+	// nameが空か空白の場合はエラー
 	if (!name || name.trim() === "") {
 		return res.status(400).json({ error: '研究者氏名を入力してください。' });
 	}
 
-	const query = `SELECT rnumber FROM researchers WHERE rname = "?"`;
+	// query = `SELECT rnumber FROM researchers WHERE rname = ?`;
+	// 同姓同名は考慮しない
+	const query = `SELECT rnumber FROM researchers WHERE rname LIKE ?`;
 
-	db.get(query, name, (err, row) => {
+	// 検索
+	db.get(query, [name], (err, row) => {
 		if (err) {
 			console.error('データベースエラー:', err);
 			return res.status(500).json({ error: 'データベースエラーが発生しました。' });
 		}
 
 		if (row) {
-			// row.rnumber は数値型なので文字列に変換して返す
-			console.log(`研究者番号取得成功: ${row.rnumber}`);
-			res.json({ 研究者番号: row.rnumber.toString() });
+			console.log(`研究者情報取得成功: ${JSON.stringify(row)}`);
+			res.json({ rnumber: row.rnumber });
 		} else {
-			res.status(404).json({ error: '研究者番号が見つかりませんでした。' });
+			console.error(`研究者情報が見つかりません: 研究者氏名=${name}`);
+			res.json({ rnumber: 'DB未登録' });
 		}
 	});
 });
 // }}}
 
-//{{{ app.get('/getAllocation', (req, res) => {
-app.get('/getAllocation', (req, res) => {
-	const projectNumber = req.query.projectNumber;
+//{{{ app.get('/allocations:get', (req, res) => {
+app.get('/allocations:get', (req, res) => {
+	//allocations:get?pnumber=課題番号
+	//allocationsテーブルから課題番号に対応する他の情報を取得
+	const pnumber = req.query.pnumber;
 
-	if (!projectNumber) {
+	if (!pnumber) {
 		console.error("エラー: 課題番号が指定されていません。");
 		return res.status(400).json({ error: '課題番号を指定してください。' });
 	}
 
 	const query = `
-		SELECT distributed_campus AS 納品キャンパス,
-			   distributed_location AS 納品先,
-			   installed_campus AS 設置キャンパス,
-			   installed_location AS 設置先, PI, CI
+		SELECT
+			PI,
+			CI,
+			distributed_campus AS 納品キャンパス,
+			distributed_location AS 納品先,
+			installed_campus AS 設置キャンパス,
+			installed_location AS 設置先
 		FROM allocations WHERE pnumber = ?
 	`;
 
-	db.get(query, [projectNumber], (err, row) => {
+	db.get(query, [pnumber], (err, row) => {
 		if (err) {
 			console.error('データベースエラー:', err);
-			return res.status(500).json({ error: 'データベースエラーが発生しました。' });
+			return res.status(500).json({ error: 'データベースエラーが発生しました。'});
 		}
 
 		if (row) {
 			console.log(`課題情報取得成功: ${JSON.stringify(row)}`);
 			res.json(row);
 		} else {
-			console.error(`課題情報が見つかりません: 課題番号=${projectNumber}`);
+			console.error(`課題情報が見つかりません: 課題番号=${pnumber}`);
 			res.status(404).json({ error: 'DB未登録' });
 		}
 	});
 });
 // }}}
 
-// {{{ app.get('/getProject', (req, res) => {
-app.get('/getProject', (req, res) => {
-	const projectNumber = req.query.projectNumber;
+// {{{ app.get('/projects:get', (req, res) => {
+app.get('/projects:get', (req, res) => {
+	//projects:get?pnumber=課題番号
+	//projectsテーブルから課題番号に対応する他の情報を取得
+	const pnumber = req.query.pnumber;
 
-	if (!projectNumber) {
+	if (!pnumber) {
 		return res.status(400).json({ error: '課題番号を指定してください。' });
 	}
 
@@ -376,17 +395,17 @@ app.get('/getProject', (req, res) => {
 		FROM projects WHERE pnumber = ?
 	`;
 
-	db.get(query, [projectNumber], (err, row) => {
+	db.get(query, [pnumber], (err, row) => {
 		if (err) {
 			console.error('データベースエラー:', err);
-			return res.status(500).json({ error: 'データベースエラーが発生しました。' });
+			return res.status(500).json({ error: 'データベースエラーが発生しました。'});
 		}
 
 		if (row) {
 			console.log(`課題情報取得成功: ${JSON.stringify(row)}`);
 			res.json(row);
 		} else {
-			console.error(`課題情報が見つかりません: 課題番号=${projectNumber}`);
+			console.error(`課題情報が見つかりません: 課題番号=${pnumber}`);
 			res.status(404).json({ error: 'DB未登録' });
 		}
 	});
@@ -538,4 +557,13 @@ PRAGMA table_info(allocations );
 4|distributed_location|TEXT|0||0
 5|installed_campus|TEXT|0||0
 6|installed_location|TEXT|0||0
+
+pragma table_info(researchers);
+0|rnumber|INTEGER|0||1
+1|rname|TEXT|1||0
+
+PRAGMA table_info(projects );
+0|pnumber|TEXT|0||1
+1|ptype|TEXT|1||0
+2|ptitle|TEXT|1||0
 */
