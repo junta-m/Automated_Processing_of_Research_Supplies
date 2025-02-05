@@ -17,7 +17,7 @@ async function handleKakenSearch() {
 	}
 
 	try {
-		const response = await fetch(`/searchProject?researcherNumber=${encodeURIComponent(researcherNumber)}`, {
+		const response = await fetch(`/searchProject?rnumber=${encodeURIComponent(researcherNumber)}`, {
 			method: "GET",
 			headers: { "Content-Type": "application/json" }
 		});
@@ -34,7 +34,7 @@ async function handleKakenSearch() {
 
 		console.log("取得した課題番号:", data.projects);
 
-		const projectOptions = document.getElementById("projectOptions");
+		const projectOptions = document.getElementById("project-options");
 		projectOptions.innerHTML = "";
 		data.projects.forEach(async (project) => {
 			const option = document.createElement("option");
@@ -46,6 +46,7 @@ async function handleKakenSearch() {
 		});
 
 		alert("課題番号の検索と更新が完了しました。");
+
 	} catch (error) {
 		console.error("エラー:", error);
 		alert(`課題番号の検索中にエラーが発生しました: ${error.message}`);
