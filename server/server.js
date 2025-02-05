@@ -277,6 +277,45 @@ app.get('/allocations:get:pnumber', (req, res) => {
 });
 // }}}
 
+//{{{ app.get('/allocations/get', (req, res) => {
+app.get('/allocations/get', (req, res) => {
+	//allocations:get?pnumber=課題番号
+	//allocationsテーブルから課題番号に対応する他の情報を取得
+	const pnumber = req.query.pnumber;
+
+	if (!pnumber) {
+		console.error("エラー: 課題番号が指定されていません。");
+		return res.status(400).json({ error: '課題番号を指定してください。' });
+	}
+
+	const query = `
+		SELECT
+			PI,
+			CI,
+			distributed_campus AS 納品キャンパス,
+			distributed_location AS 納品先,
+			installed_campus AS 設置キャンパス,
+			installed_location AS 設置先
+		FROM allocations WHERE pnumber = ?
+	`;
+
+	db.get(query, [pnumber], (err, row) => {
+		if (err) {
+			console.error('allocations:get;データベースエラー:', err);
+			return res.status(500).json({ error: 'データベースエラーが発生しました。'});
+		}
+
+		if (row) {
+			console.log(`allocations:get;課題情報取得成功: ${JSON.stringify(row)}`);
+			res.json(row);
+		} else {
+			console.error(`allocation:get;課題情報が見つかりません: 課題番号=${pnumber}`);
+			res.status(404).json({ error: 'DB未登録' });
+		}
+	});
+});
+// }}}
+
 // {{{ app.get('/researchers:get:rname', (req, res) => {
 app.get('/researchers:get:rname', (req, res) => {
 	//researchers:get:rname?rnumber=研究者番号
@@ -308,9 +347,9 @@ app.get('/researchers:get:rname', (req, res) => {
 });
 // }}}
 
-//{{{ app.get('/researchers:get:rnumber', (req, res) => {
-app.get('/researchers:get:rnumber', (req, res) => {
-	//researchers:get:rnumber?rname=研究者氏名
+//{{{ app.get('/researchers/get/rnumber', (req, res) => {
+app.get('/researchers/get/rnumber', (req, res) => {
+	//researchers/get/rnumber?rname=研究者氏名
 	//でresearchersテーブルから研究者番号を取得
 	const name = req.query.rname;
 
@@ -336,45 +375,6 @@ app.get('/researchers:get:rnumber', (req, res) => {
 		} else {
 			console.error(`研究者情報が見つかりません: 研究者氏名=${name}`);
 			res.json({ rnumber: 'DB未登録' });
-		}
-	});
-});
-// }}}
-
-//{{{ app.get('/allocations:get', (req, res) => {
-app.get('/allocations:get', (req, res) => {
-	//allocations:get?pnumber=課題番号
-	//allocationsテーブルから課題番号に対応する他の情報を取得
-	const pnumber = req.query.pnumber;
-
-	if (!pnumber) {
-		console.error("エラー: 課題番号が指定されていません。");
-		return res.status(400).json({ error: '課題番号を指定してください。' });
-	}
-
-	const query = `
-		SELECT
-			PI,
-			CI,
-			distributed_campus AS 納品キャンパス,
-			distributed_location AS 納品先,
-			installed_campus AS 設置キャンパス,
-			installed_location AS 設置先
-		FROM allocations WHERE pnumber = ?
-	`;
-
-	db.get(query, [pnumber], (err, row) => {
-		if (err) {
-			console.error('データベースエラー:', err);
-			return res.status(500).json({ error: 'データベースエラーが発生しました。'});
-		}
-
-		if (row) {
-			console.log(`課題情報取得成功: ${JSON.stringify(row)}`);
-			res.json(row);
-		} else {
-			console.error(`課題情報が見つかりません: 課題番号=${pnumber}`);
-			res.status(404).json({ error: 'DB未登録' });
 		}
 	});
 });
@@ -471,14 +471,14 @@ app.get('/searchResearcherNumber', async (req, res) => {
 app.get("/searchProject", async (req, res) => {
 	try {
 		console.log("searchProject API called with query parameters:", req.query);
+		const rnumber = req.query.rnumber;
 
-		const researcherNumber = req.query.researcherNumber;
-		if (!researcherNumber) {
-			return res.status(400).json({ error: "研究者番号が必要です" });
+		if (!rnumber) {
+			return res.status(400).json({ error: "a研究者番号が必要です" });
 		}
 
 		// KAKEN API へのリクエスト
-		const kakenApiUrl = `https://kaken.nii.ac.jp/opensearch/?format=xml&qm=${encodeURIComponent(researcherNumber)}&c1=granted&appid=${process.env.KAKENAPI}`;
+		const kakenApiUrl = `https://kaken.nii.ac.jp/opensearch/?format=xml&qm=${encodeURIComponent(rnumber)}&c1=granted&appid=${process.env.KAKENAPI}`;
 
 		const response = await axios.get(kakenApiUrl);
 		if (response.status !== 200) {
@@ -495,6 +495,7 @@ app.get("/searchProject", async (req, res) => {
 		const parser = new XMLParser({ ignoreAttributes: false });
 		const jsonData = parser.parse(xmlData);
 
+		// gratnsは grantAwards タグの中にある
 		const grants = jsonData?.grantAwards?.grantAward;
 		if (!grants) {
 			return res.status(404).json({ error: "該当する課題番号が見つかりませんでした" });
@@ -502,6 +503,7 @@ app.get("/searchProject", async (req, res) => {
 
 		let projects = [];
 
+		// 各 grantAward タグを処理
 		const processGrant = (grant) => {
 			const awardNumber = grant["@_awardNumber"] || "不明";
 			const summary = Array.isArray(grant?.summary) ? grant.summary[0] : grant?.summary || {};
@@ -515,6 +517,7 @@ app.get("/searchProject", async (req, res) => {
 			const researcherId = typeof member?.enriched?.researcherNumber === "object" ? member.enriched.researcherNumber["#text"] || "不明" : member?.enriched?.researcherNumber || "不明";
 			const researcherName = member?.personalName?.fullName || "不明";
 
+			// プロジェクト情報を配列に追加
 			projects.push({
 				awardNumber,
 				title,
@@ -524,7 +527,9 @@ app.get("/searchProject", async (req, res) => {
 			});
 		};
 
+		// grants が配列かどうかで処理を分岐
 		if (Array.isArray(grants)) {
+			// 各 grantAward タグを処理
 			grants.forEach(processGrant);
 		} else {
 			processGrant(grants);
