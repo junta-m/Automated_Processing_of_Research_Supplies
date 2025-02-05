@@ -139,6 +139,7 @@
 						<option value="特定領域研究">特定領域研究</option>
 						<option value="国際共同研究">国際共同研究</option>
 						<option value="科学研究費補助金">科学研究費補助金</option>
+						<option value="間接経費">間接経費</option>
 						<option value="その他">その他</option>
 					</datalist>
 
@@ -378,9 +379,11 @@
 			<div id="system-input">
 				<button id="form-apply">科研システム入力</button>
 				<button
-					id="db-updated"
+					id="dbs-update"
 					class="pain-button"
-					data-tooltip="フォームに入力された課題情報をローカルDBに保存します."
+					data-tooltip="
+					フォームに入力された課題情報をローカルDBに保存します.
+					"
 				>
 					DB更新
 				</button>
@@ -414,6 +417,9 @@
 
 	<!-- auto completeをoff? -->
 	<script src="./autocomplete.js"></script>
+
+	<!-- db 更新スクリプト -->
+	<script src="./update_db.js" defer></script>
 
 	<!-- <script src="/client.js"></script> -->
 	<!-- <script src="./db_update.js"></script> -->
