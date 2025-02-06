@@ -56,6 +56,7 @@
 							研究者名からローカルかCiNiiのDBから候補を取得します.
 							候補が表示されない場合は, 手入力してください.
 						"
+						value="40868262"
 					>
 
 					<!--
@@ -68,7 +69,12 @@
 						<!-- 動的に候補が挿入される -->
 					</datalist>
 
-					<input type="text" id="研究者氏名" placeholder="研究者氏名">
+					<input
+						type="text"
+						id="研究者氏名"
+						placeholder="研究者氏名"
+						value="藤原和将"
+					>
 					<button
 						id="研究者番号CiNii検索"
 						data-tooltip="研究者名からCiNiiにアクセスして研究者番号を取得します.検索結果は, ローカルDBに保存されます."
@@ -78,11 +84,13 @@
 				</div>
 
 				<div class="project-search">
+					<!-- 仮の値としてK23036を入れる -->
 					<input
 						id="研究課題番号"
 						list="project-options"
 						placeholder="研究課題番号"
 						autoComplete="off"
+						value="K23036"
 					>
 					<input type="text" name="dummy" style="display:none"><br>
 
@@ -125,6 +133,7 @@
 						list="project-list"
 						id="課題種別"
 						placeholder="課題種別"
+						value="間接経費"
 					>
 
 					<datalist id="project-list">
@@ -147,7 +156,12 @@
 				</div>
 
 				<div class="input-line">
-					<input type="text" id="代表者" placeholder="代表者">
+					<input
+						type="text"
+						id="代表者"
+						placeholder="代表者"
+						value="藤原和将"
+					>
 					<input type="text" id="分担者" placeholder="分担者">
 				</div>
 

@@ -87,13 +87,13 @@ document.addEventListener("DOMContentLoaded", function() {
 	//const { projectNumber, PI, CI, distributedCampus, distributedLocation, installedCampus, installedLocation } = req.body;
 
 	const allocationsRecord = {
-		pnumber: requestData.pnumber,
+		projectNumber: requestData.pnumber,
 		PI: PI,
 		CI: CI,
-		delivered_campus: requestData.delivered_campus,
-		delivered_location: requestData.delivered_location,
-		installed_campus: requestData.installed_campus,
-		installed_location: requestData.installed_location
+		distributedCampus: requestData.delivered_campus,
+		distributedLocation: requestData.delivered_location,
+		installedCampus: requestData.installed_campus,
+		installedLocation: requestData.installed_location
 	};
 
 	const response2 = await fetch('/updateAllocation', {

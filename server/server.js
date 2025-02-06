@@ -81,19 +81,23 @@ app.post('/insertProject', (req, res) => {
 
 // {{{ app.post('/updateProject', (req, res) => {
 app.post('/updateProject', (req, res) => {
-	const { projectNumber, projectType, projectTitle } = req.body;
+	const { pnumber, ptype, ptitle } = req.body;
 
-	if (!projectNumber || !projectType || !projectTitle) {
+	if (!pnumber || !ptype || !ptitle) {
 		return res.status(400).json({ error: '全ての項目を入力してください。' });
 	}
 
+	// CONFLICTの場合はUPDATE
 	const query = `
 		INSERT INTO projects (pnumber, ptype, ptitle)
 		VALUES (?, ?, ?)
 		ON CONFLICT(pnumber) DO UPDATE SET
+		pnumber = excluded.pnumber,
+		ptype = excluded.ptype,
+		ptitle = excluded.ptitle
 	`;
 
-	db.run(query, [projectNumber, projectType, projectTitle], function (err) {
+	db.run(query, [pnumber, ptype, ptitle], function (err) {
 		if (err) {
 			console.error('データベースエラー:', err);
 			return res.status(500).json({ error: 'データベースエラーが発生しました。' });
@@ -105,31 +109,31 @@ app.post('/updateProject', (req, res) => {
 
 //{{{ app.post('/insertAllocation', (req, res) => {
 app.post('/insertAllocation', (req, res) => {
-    const { projectNumber, distributedCampus, distributedLocation, installedCampus, installedLocation, PI } = req.body;
-    let { CI } = req.body;
+	const { projectNumber, distributedCampus, distributedLocation, installedCampus, installedLocation, PI } = req.body;
+	let { CI } = req.body;
 
-    // CIがnullの場合、デフォルト値を設定
-    if (!CI) {
-        CI = 'NONE'; // あるいは他の適切なデフォルト値
-    }
+	// CIがnullの場合、デフォルト値を設定
+	if (!CI) {
+		CI = 'NONE'; // あるいは他の適切なデフォルト値
+	}
 
-    const query = `
-        INSERT INTO allocations (pnumber, PI, CI, distributed_campus, distributed_location, installed_campus, installed_location)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-        ON CONFLICT(pnumber, PI, CI) DO NOTHING;
-    `;
+	const query = `
+		INSERT INTO allocations (pnumber, PI, CI, distributed_campus, distributed_location, installed_campus, installed_location)
+		VALUES (?, ?, ?, ?, ?, ?, ?)
+		ON CONFLICT(pnumber, PI, CI) DO NOTHING;
+	`;
 
-    db.run(query, [projectNumber, PI, CI, distributedCampus, distributedLocation, installedCampus, installedLocation], function (err) {
-        if (err) {
-            console.error('iA: DB error:', err);
-            return res.status(500).json({ error: 'iA: DB error' });
-        }
-        if (this.changes === 0) {
+	db.run(query, [projectNumber, PI, CI, distributedCampus, distributedLocation, installedCampus, installedLocation], function (err) {
+		if (err) {
+			console.error('iA: DB error:', err);
+			return res.status(500).json({ error: 'iA: DB error' });
+		}
+		if (this.changes === 0) {
 			  console.log(`iA: record skipped: pnumber=${projectNumber}, PI=${PI}, CI=${CI}`);
-            return res.status(409).json({ message: 'iA: Insersion Skipped.' });
-        }
-        res.json({ message: 'iA: record inserted' });
-    });
+			return res.status(409).json({ message: 'iA: Insersion Skipped.' });
+		}
+		res.json({ message: 'iA: record inserted' });
+	});
 });
 //}}}
 
@@ -139,8 +143,9 @@ app.post('/updateAllocation', (req, res) => {
 
 	const { projectNumber, PI, CI, distributedCampus, distributedLocation, installedCampus, installedLocation } = req.body;
 
-	if (!projectNumber || !PI || !distributedCampus || !distributedLocation || !installedCampus || !installedLocation) {
+	if (!projectNumber || !PI || !distributedCampus || !installedCampus) {
 		return res.status(400).json({ error: '必須項目が不足しています。' });
+		console.log("updateAllocation API called with query parameters:", req.body);
 	}
 
 	let checkQuery;
