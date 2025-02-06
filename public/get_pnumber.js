@@ -1,60 +1,48 @@
 document.addEventListener("DOMContentLoaded", function() {
-    document.getElementById("local-an-fetch").addEventListener("click", function() {
-        const researcherNumber = document.getElementById("研究者番号").value.trim();
-        if (!researcherNumber) {
-            alert("研究者番号を入力してください。");
-            return;
-        }
+	const fetchButton = document.getElementById("local-an-fetch");
+	fetchButton.addEventListener("click", function() {
+		const researcherNumber = document.getElementById("研究者番号").value.trim();
+		if (!researcherNumber) {
+			alert("研究者番号を入力してください。");
+			return;
+		}
 
-        // 研究者氏名を取得
-        fetch(`/fetchResearcherName?researcherId=${encodeURIComponent(researcherNumber)}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    console.warn("研究者氏名の取得に失敗:", data.error);
-                    return;
-                }
-                document.getElementById("研究者氏名").value = data.name; // 研究者氏名を更新
-            })
-            .catch(error => {
-                console.error("研究者氏名取得エラー:", error);
-            });
+		fetch(`/allocations:get:pnumber?rnumber=${encodeURIComponent(researcherNumber)}`)
+			.then(response => response.json())
+			// 返り値の形式は { pnumbers: [課題番号1, 課題番号2, ...] }
+			.then(data => {
+				// data example: pnumbers: ['24H00024', '24K16957']
+				//datalist id="projct-options"のdatalistを指定
+				const projectOptions = document.getElementById("project-options");
+				// Clear existing options
+				projectOptions.innerHTML = "";
 
-        // 課題番号の取得
-        fetch(`/getProjectsByResearcherNumber?researcherNumber=${encodeURIComponent(researcherNumber)}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    alert(data.error);
-                    return;
-                }
+				console.log(data.pnumbers);
 
-                const projectOptions = document.getElementById("projectOptions");
-                projectOptions.innerHTML = ""; // 既存の候補をクリア
+				// data.pnumbers=[pnum1, pnum2, ...]が存在し、その要素数が1以上の場合
+				if (data.pnumbers && data.pnumbers.length > 0) {
+					// data.pnumbersの各要素に対して以下を実行
+					data.pnumbers.forEach(pnumbers => {
+						// option要素を作成
+						const option = document.createElement("option");
+						// option要素のvalue属性にpnumbersを設定
+						option.value = pnumbers;
+						// option要素のtextContentにpnumbersを設定
+						option.textContent = pnumbers;
+						// option要素をdatalistに追加
+						projectOptions.appendChild(option);
+					});
 
-                data.projects.forEach(projectNumber => {
-                    const option = document.createElement("option");
-                    option.value = projectNumber;
-                    projectOptions.appendChild(option);
-                });
-
-					// 検索結果が0件の場合、警告を表示
-					// 検索結果が1件の場合、課題番号を自動入力
-					// 複数件の場合はdatalistを表示
-					if (data.projects.length === 0) {
-						alert("該当する課題番号が見つかりませんでした。");
-					} else if (data.projects.length === 1) {
-						document.getElementById("研究課題番号").value = data.projects[0];
-					} else {
-						document.getElementById("研究課題番号").setAttribute("list", "projectOptions");
-						alert("課題番号候補を追加したので,選択してください. 候補にない場合は情報を入力してください.");
-					}
-
-            })
-            .catch(error => {
-                console.error("データ取得エラー:", error);
-                alert("データ取得に失敗しました。");
-            });
-    });
+					alert(`${data.pnumbers.length}件該当しました.プロジェクトを選択してください. プロジェクトがない場合は手入力してください.`);
+					console.log(`${data.pnumbers.length} projects added to the datalist.`);
+				} else {
+					console.log("No projects found.");
+					alert("該当するプロジェクトが見つかりませんでした.");
+				}
+			})
+			.catch(error => {
+				console.error("Error fetching data: ", error);
+			});
+	});
 });
 

@@ -5,6 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>科研費自動化システム</title>
+	<!-- <link rel="stylesheet" href="styles.css"> -->
 	<link rel="stylesheet" href="./styles.css">
 </head>
 
@@ -56,7 +57,6 @@
 							研究者名からローカルかCiNiiのDBから候補を取得します.
 							候補が表示されない場合は, 手入力してください.
 						"
-						value="40868262"
 					>
 
 					<!--
@@ -69,12 +69,7 @@
 						<!-- 動的に候補が挿入される -->
 					</datalist>
 
-					<input
-						type="text"
-						id="研究者氏名"
-						placeholder="研究者氏名"
-						value="藤原和将"
-					>
+					<input type="text" id="研究者氏名" placeholder="研究者氏名">
 					<button
 						id="研究者番号CiNii検索"
 						data-tooltip="研究者名からCiNiiにアクセスして研究者番号を取得します.検索結果は, ローカルDBに保存されます."
@@ -84,18 +79,15 @@
 				</div>
 
 				<div class="project-search">
-					<!-- 仮の値としてK23036を入れる -->
 					<input
 						id="研究課題番号"
 						list="project-options"
 						placeholder="研究課題番号"
-						autoComplete="off"
-						value="K23036"
 					>
-					<input type="text" name="dummy" style="display:none"><br>
 
 					<datalist id="project-options">
-						<!-- 動的に候補が挿入される -->
+						<option value="基盤研究(S)" label="基盤研究(S)"></option>
+						<option value="基盤研究(SSS)" label="基盤研究(SSS)"></option>
 					</datalist>
 
 					<button
@@ -133,7 +125,6 @@
 						list="project-list"
 						id="課題種別"
 						placeholder="課題種別"
-						value="間接経費"
 					>
 
 					<datalist id="project-list">
@@ -148,7 +139,6 @@
 						<option value="特定領域研究">特定領域研究</option>
 						<option value="国際共同研究">国際共同研究</option>
 						<option value="科学研究費補助金">科学研究費補助金</option>
-						<option value="間接経費">間接経費</option>
 						<option value="その他">その他</option>
 					</datalist>
 
@@ -156,12 +146,7 @@
 				</div>
 
 				<div class="input-line">
-					<input
-						type="text"
-						id="代表者"
-						placeholder="代表者"
-						value="藤原和将"
-					>
+					<input type="text" id="代表者" placeholder="代表者">
 					<input type="text" id="分担者" placeholder="分担者">
 				</div>
 
@@ -177,7 +162,7 @@
 					</div>
 
 					<div class="input-line-group">
-						<label for="設置キャンパス">設置</label>
+						<span>設置</span>
 						<select id="設置キャンパス">
 							<option value="瀬田">瀬田</option>
 							<option value="深草">深草</option>
@@ -393,11 +378,9 @@
 			<div id="system-input">
 				<button id="form-apply">科研システム入力</button>
 				<button
-					id="dbs-update"
+					id="db-updated"
 					class="pain-button"
-					data-tooltip="
-					フォームに入力された課題情報をローカルDBに保存します.
-					"
+					data-tooltip="フォームに入力された課題情報をローカルDBに保存します."
 				>
 					DB更新
 				</button>
@@ -405,39 +388,6 @@
 		</div>
 	</div>
 
-	<script src="./json_imp.js"></script>
-	<script src="./json_exp.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.15.349/pdf.min.js"></script>
-	<script src="./pdf_preview.js"></script>
-	<script src="./zoom.js"></script>
-	<script src="./pdf_demo.js"></script>
-	<script src="./input_rule.js"></script>
-
-	<!-- get: local db だけを利用 -->
-	<!-- search: web api だけを利用 -->
-	<!-- get_search: local db と web api の両方を利用 -->
-
-	<!-- 課題情報DB検索用js -->
-	<script src="./get_project_allocation.js"></script>
-
-	<!-- 課題番号DB検索用js -->
-	<script src="./get_pnumber.js"></script>
-
-	<!-- 研究者番号CiNii検索用js -->
-	<script src="./search_rnumber.js"></script>
-
-	<!-- 課題番号KAKEN検索用js -->
-	<script src="./search_projects.js"></script>
-
-	<!-- auto completeをoff? -->
-	<script src="./autocomplete.js"></script>
-
-	<!-- db 更新スクリプト -->
-	<script src="./update_db.js" defer></script>
-
-	<!-- <script src="/client.js"></script> -->
-	<!-- <script src="./db_update.js"></script> -->
-	<!-- <script src="/datalist.js"></script> -->
 
 </body>
 
