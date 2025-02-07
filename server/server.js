@@ -1,15 +1,22 @@
-require('dotenv').config();
-const express = require('express');
-const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
+import express from 'express';
+import sqlite3 from 'sqlite3';
+import path from 'path';
+import axios from 'axios';
+import { exec } from 'child_process';
+import { XMLParser } from 'fast-xml-parser';
+import FormData from 'form-data';
+import fetch from 'node-fetch';
+import multer from 'multer';
+import { config } from 'dotenv';
+
+config();  // 環境変数をロード
+
 const app = express();
 const port = process.env.PORT || 3000;
-const axios = require('axios');
-const { exec } = require('child_process');
-const { XMLParser } = require("fast-xml-parser");
+const upload = multer({ storage: multer.memoryStorage() });
 
 // SQLite データベース接続
-const db = new sqlite3.Database(path.join(__dirname, '../ARPS.db'), (err) => {
+const db = new sqlite3.Database(path.join(process.cwd(), './ARPS.db'), (err) => {
 	if (err) {
 		console.error('データベース接続エラー:', err);
 	} else {
@@ -17,28 +24,10 @@ const db = new sqlite3.Database(path.join(__dirname, '../ARPS.db'), (err) => {
 	}
 });
 
-// ミドルウェア
 app.use(express.json());
+app.use(express.static(path.join(process.cwd(), './public')));
 
-// 静的ファイルを提供
-app.use(express.static(path.join(__dirname, '../public')));
-
-// 全てのレスポンスに共通ヘッダーを追加
-app.use((req, res, next) => {
-    res.setHeader('X-Content-Type-Options', 'nosniff');
-    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-    res.setHeader('Pragma', 'no-cache');
-    res.setHeader('Expires', '0');
-    next();
-});
-
-
-// ルートエンドポイント
-app.get('/', (req, res) => {
-	res.sendFile(path.join(__dirname, '../public/index.html'));
-});
-
-// {{{ app.post('/insertProject', (req, res) => {
+//// {{{ app.post('/insertProject', (req, res) => {
 app.post('/insertProject', (req, res) => {
 	const { projectNumber, projectType, projectTitle } = req.body;
 
@@ -553,27 +542,65 @@ app.get("/searchProject", async (req, res) => {
 });
 //}}}
 
+//{{{ app.post('/api/extract-json', upload.single('pdf'), async (req, res) => {
+app.post('/api/extract-json', upload.single('pdf'), async (req, res) => {
+	try {
+		if (!req.file) {
+			return res.status(400).json({ error: 'No PDF file uploaded.' });
+		}
+
+		if (!process.env.GEMINI) {
+			return res.status(500).json({ error: 'Missing GEMINI API key.' });
+		}
+
+		// PDFをBase64に変換
+		const pdfBase64 = req.file.buffer.toString('base64');
+
+		// Gemini APIにリクエスト
+		const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash-001:generateContent?key=${process.env.GEMINI}`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				"contents": [
+					{
+						"parts": [
+							{
+								"text": "領収書または納品書の情報を解析し、購入項目ごとに以下の形式でJSONに構造化してください。ただし、以下の処理を施してください。\n+ 金額の部分はカンマがあれば除いてください\n+ 金額が0の項目は無視してください\n\n{ \"title\": \"領収書タイトル\", \"issuer\": \"発行者情報\", \"receiver_group\": \"受領者所属\", \"receiver_name\": \"受領者氏名(敬称、空白は除く)\", \"total_amount\": \"合計金額\", \"payment_date\": \"支払日\", \"items\": [ { \"product_name\": \"製品名(型番は抜く)\", \"provider\": \"メーカー\", \"model\": \"型番\", \"unite_price\": \"単価\", \"total_price\": \"金額\", \"number\": \"個数\", \"delivery_date\": \"発送日\" } ] }"
+							},
+							{
+								"inlineData": {
+									"mimeType": "application/pdf",
+									"data": pdfBase64
+								}
+							}
+						]
+					}
+				]
+			})
+		});
+
+		const jsonResponse = await response.json();
+		if (!response.ok) {
+			console.error('Gemini API error:', jsonResponse);
+			return res.status(500).json({ error: 'Failed to process PDF' });
+		}
+
+		// JSON部分の抽出
+		const extractedText = jsonResponse?.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+		const extractedJsonMatch = extractedText.match(/```json\n([\s\S]+?)\n```/);
+		const extractedJson = extractedJsonMatch ? JSON.parse(extractedJsonMatch[1]) : {};
+
+		res.json(extractedJson);
+
+	} catch (error) {
+		console.error('Error in PDF JSON extraction:', error);
+		res.status(500).json({ error: 'Internal server error while extracting JSON from PDF' });
+	}
+});
+//}}}
+
 // サーバー起動
 app.listen(port, () => {
 	console.log(`サーバーが http://localhost:${port} で起動しました`);
 });
 
-/*
-PRAGMA table_info(allocations );
-0|pnumber|TEXT|1||1
-1|PI|TEXT|1||2
-2|CI|TEXT|0||3
-3|distributed_campus|TEXT|0||0
-4|distributed_location|TEXT|0||0
-5|installed_campus|TEXT|0||0
-6|installed_location|TEXT|0||0
-
-pragma table_info(researchers);
-0|rnumber|INTEGER|0||1
-1|rname|TEXT|1||0
-
-PRAGMA table_info(projects );
-0|pnumber|TEXT|0||1
-1|ptype|TEXT|1||0
-2|ptitle|TEXT|1||0
-*/

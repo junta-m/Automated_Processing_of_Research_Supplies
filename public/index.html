@@ -56,7 +56,6 @@
 							研究者名からローカルかCiNiiのDBから候補を取得します.
 							候補が表示されない場合は, 手入力してください.
 						"
-						value="40868262"
 					>
 
 					<!--
@@ -73,7 +72,6 @@
 						type="text"
 						id="研究者氏名"
 						placeholder="研究者氏名"
-						value="藤原和将"
 					>
 					<button
 						id="研究者番号CiNii検索"
@@ -90,7 +88,6 @@
 						list="project-options"
 						placeholder="研究課題番号"
 						autoComplete="off"
-						value="K23036"
 					>
 					<input type="text" name="dummy" style="display:none"><br>
 
@@ -133,7 +130,6 @@
 						list="project-list"
 						id="課題種別"
 						placeholder="課題種別"
-						value="間接経費"
 					>
 
 					<datalist id="project-list">
@@ -160,7 +156,6 @@
 						type="text"
 						id="代表者"
 						placeholder="代表者"
-						value="藤原和将"
 					>
 					<input type="text" id="分担者" placeholder="分担者">
 				</div>
@@ -410,12 +405,10 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.15.349/pdf.min.js"></script>
 	<script src="./pdf_preview.js"></script>
 	<script src="./zoom.js"></script>
-	<script src="./pdf_demo.js"></script>
 	<script src="./input_rule.js"></script>
 
-	<!-- get: local db だけを利用 -->
-	<!-- search: web api だけを利用 -->
-	<!-- get_search: local db と web api の両方を利用 -->
+	<!-- pdfを読み込んで転記する -->
+	<script src="./pdf_handler.js"></script>
 
 	<!-- 課題情報DB検索用js -->
 	<script src="./get_project_allocation.js"></script>
